@@ -1,0 +1,1 @@
+Multiplatform system wide hotkeys
