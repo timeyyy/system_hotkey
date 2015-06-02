@@ -1,4 +1,6 @@
 .. highlight:: rst
+
+
 ==============
 System Hotkeys
 ==============
@@ -38,8 +40,6 @@ To not use the callback sytem you can do something like this
 			
      hk = SystemHotkeys(consumer=some_func)
      
- .. highlight:: rst
-
 
 * Install `Python 2.7 <http://www.python.org/ftp/python/2.7/python-2.7.msi>`_
 * Install `Python Setuptools <http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11.win32-py2.7.exe#md5=57e1e64f6b7c7f1d2eddfc9746bbaf20>`_ (a package manager)
