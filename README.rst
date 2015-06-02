@@ -18,15 +18,15 @@ then do the old pip3 install system_hotkeys
 Usage:
 ______
 
-from system_hotkey import SystemHotkeys
+     from system_hotkey import SystemHotkeys
 
-hk = SystemHotkeys()
-hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
-hk.unregister(('control', 'shift', 'h'))
+     hk = SystemHotkeys()
+     hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
+     hk.unregister(('control', 'shift', 'h'))
 
 To not use the callback sytem you can do something like this
 
-def some_func(self, event, hotkey, args):	
-				self.do_something(hotkey)	
+     def some_func(self, event, hotkey, args):	
+	     self.do_something(hotkey)	
 			
-hk = SystemHotkeys(consumer=some_func)
+     hk = SystemHotkeys(consumer=some_func)
