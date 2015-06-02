@@ -1,3 +1,4 @@
+.. highlight:: rst
 System Hotkeys
 ==============
 
