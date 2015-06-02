@@ -1,28 +1,35 @@
 .. highlight:: rst
+==============
 System Hotkeys
 ==============
 
-'Multiplatform system wide hotkeys'
+'Multiplatform system wide hotkeys for python 3, no python2 support'
 
 Atm support x11 and windows. Osx support is coming in a few years i would say!
 
+------------
 Installation
-^^^^^^^^^^^^
+------------
+the old "pip3 install system_hotkeys" should do the trick
 
-For windows you will need to install pywin32
+^^^^^^^^
+Windows
+^^^^^^^^
+also install pywin32
 
+^^^^^^
+Linux
+^^^^^^^
 For x11 you will should probably use the xcffib library, you will need the xcb bindings (bsd license) installed to use it (i think???)
-Also supported is the python xlib bindings (gpl license)
+Also supported is the python xlib bindings (gpl license
 
-then do the old pip3 install system_hotkeys
 
 Usage:
 ^^^^^^
-			from system_hotkey import SystemHotkeys
-
-			hk = SystemHotkeys()
-			hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
-			hk.unregister(('control', 'shift', 'h'))
+     from system_hotkey import SystemHotkeys
+         hk = SystemHotkeys()
+         hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
+         hk.unregister(('control', 'shift', 'h'))
 
 To not use the callback sytem you can do something like this
 
@@ -33,17 +40,6 @@ To not use the callback sytem you can do something like this
      
  .. highlight:: rst
 
-============================
-reStructuredText with Sphinx
-============================
-
------------------
-Setting up Sphinx
------------------
-
-^^^^^^^^^^
-Windows XP
-^^^^^^^^^^
 
 * Install `Python 2.7 <http://www.python.org/ftp/python/2.7/python-2.7.msi>`_
 * Install `Python Setuptools <http://pypi.python.org/packages/2.7/s/setuptools/setuptools-0.6c11.win32-py2.7.exe#md5=57e1e64f6b7c7f1d2eddfc9746bbaf20>`_ (a package manager)
