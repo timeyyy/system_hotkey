@@ -6,7 +6,7 @@ System Hotkeys
 Atm support x11 and windows. Osx support is coming in a few years i would say!
 
 Installation
-____________
+^^^^^^^^^^^^
 
 For windows you will need to install pywin32
 
@@ -16,9 +16,9 @@ Also supported is the python xlib bindings (gpl license)
 then do the old pip3 install system_hotkeys
 
 Usage:
-______
+^^^^^^
 
-     from system_hotkey import SystemHotkeys
+       from system_hotkey import SystemHotkeys
 
      hk = SystemHotkeys()
      hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
