@@ -1,4 +1,4 @@
-python "system_hotkey.py" bdist_esky_patch
+python "system_hotkey.py" bdist_esky
 
 pause
 del "%0"
