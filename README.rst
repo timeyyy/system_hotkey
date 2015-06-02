@@ -18,7 +18,7 @@ then do the old pip3 install system_hotkeys
 
 Usage:
 ^^^^^^
-
+.. code-block:: python
        from system_hotkey import SystemHotkeys
 
      hk = SystemHotkeys()
