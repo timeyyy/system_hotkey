@@ -36,10 +36,11 @@ from system_hotkey import SystemHotkeys
 ```
 
 To not use the callback sytem you can do something like this
-'''python
+
+```python
 def some_func(self, event, hotkey, args):	
 	pass	
 
 hk = SystemHotkeys(consumer=some_func)
-'''
+```
 
