@@ -1,6 +1,7 @@
 #https://wiki.python.org/moin/AppsWithPythonScripting
 #~ http://msdn.microsoft.com/en-us/library/ms927178.aspx
 #http://www.kbdedit.com/manual/low_level_vk_list.html
+#http://stackoverflow.com/questions/14076207/simulating-a-key-press-event-in-python-2-7	#TBD WINDOWS KEY UP /DOWN ?
 import os
 import _thread as thread 										
 import queue
@@ -165,14 +166,28 @@ class UnregisterError(Exception):pass
 
 class MixIn():
 	def register(self, hotkey, callback=None):
-		'''Add a system wide hotkey,
-		If the Systemhotkey class consumer attribute value is set to callback,
-		a corresponding function will be called when the hotkey combination is pressed
-		
-		Otherwise...
-		
-		e.g register()
 		'''
+		Add a system wide hotkey,
+		
+		hotkey needs to be a tuple/list
+		
+		If the Systemhotkey class consumer attribute value is set to callback,
+		callback will need to be a callable object that will be run
+		
+		Otherwise callback  is optionall and will be used as parameters
+		to the consumer function
+		
+		Modifiers include
+		control	#TBD ADD SPACE??? 
+		shift
+		win
+		alt
+		e.g register()
+		
+		'''
+		assert type(hotkey) in (tuple, list)
+		if self.consumer == 'callback' and not callback:pass
+			raise TypeError('Function register requires callback argument in non sonsumer mode')
 		hotkey = self.order_hotkey(hotkey)
 		keycode, masks = self.parse_hotkeylist(hotkey)
 		
@@ -193,26 +208,26 @@ class MixIn():
 			print()
 		if os.name == 'posix' and self.use_xlib:
 			self.disp.flush()
-		'''
-		This code works but im pre sure windows doesn't support differentaion between keypress/keyrelease so delete this
-		on my laptoop anyway keyrelease fires even if key is still down
-
-		assert event_type in ('keypress', 'keyrelease', 'both')
 		
-		copy = list(hotkey)
-		if event_type != 'both':	
-			copy.append(event_type)
-			KEYBINDS[tuple(copy)].append(callback)
-		else:	# Binding to both keypress and keyrelease
-			copy.append('keypress')
-			KEYBINDS[tuple(copy)].append(callback)
-			copy[-1] = 'keyrelease'
-			KEYBINDS[tuple(copy)].append(callback)
-		'''
+		#~ This code works but im not sure abot pywin  support for differentiation between keypress/keyrelease so..
+		#~ on my laptoop on linux anyway keyrelease fires even if key is still down...
+
+		#~ assert event_type in ('keypress', 'keyrelease', 'both')
+		#~ 
+		#~ copy = list(hotkey)
+		#~ if event_type != 'both':	
+			#~ copy.append(event_type)
+			#~ KEYBINDS[tuple(copy)].append(callback)
+		#~ else:	# Binding to both keypress and keyrelease
+			#~ copy.append('keypress')
+			#~ KEYBINDS[tuple(copy)].append(callback)
+			#~ copy[-1] = 'keyrelease'
+			#~ KEYBINDS[tuple(copy)].append(callback)
 		
 	def unregister(self, hotkey):
 		'''
-		Remove the System wide hotkey
+		Remove the System wide hotkey,
+		the order of the modifier keys is irrelevant
 		'''
 		keycode, masks = self.parse_hotkeylist(hotkey)
 		if os.name == 'nt':
@@ -260,7 +275,7 @@ class MixIn():
 	def parse_hotkeylist(self, full_hotkey):
 		# Returns keycodes and masks from a list of hotkey masks
 		masks = []
-		keycode = self._get_keycode(full_hotkey[-1])
+		keycode = self.get_keycode(full_hotkey[-1])
 		if len(full_hotkey) > 1:
 			for item in full_hotkey[:-1]:
 				try:
@@ -336,7 +351,6 @@ class SystemHotkey(MixIn):
 		I have never programed in xwindows so im not sure if there are restrictions on the connection to the
 		display window, You can pass an exisiting display or connection using the conn keyword
 		'''
-		
 		# Changes the class methods to point to differenct functions 
 		# Depening on the operating system and library used
 		# Consumer defaults to callback which associate a unique function to each hotkey
@@ -348,6 +362,7 @@ class SystemHotkey(MixIn):
 		# actually a consequence of the keybaord and operating systems not this library
 		self.verbose = verbose
 		self.use_xlib = use_xlib
+		self.consumer = consumer
 		def mark_event_type(event):
 			if os.name == 'posix':
 				if self.use_xlib:
@@ -369,17 +384,16 @@ class SystemHotkey(MixIn):
 			self.hk_action_queue = queue.Queue()
 			self.modders = win_modders
 			self._the_grab = self._nt_the_grab
-			self._get_keycode = self._nt_get_keycode			
+			self.get_keycode = self._nt_get_keycode			
 			self._get_keysym = self._nt_get_keysym
 			
 			thread.start_new_thread(self._nt_wait,(),)
 			
 		elif use_xlib:												# Use the python-xlib library bindings, GPL License
-			#~ self.the_grab = self._xlib_the_grab
 			self.modders = xlib_modifiers
 			self.trivial_mods = xlib_trivial_mods
 			self._the_grab = self._xlib_the_grab
-			self._get_keycode = self._xlib_get_keycode
+			self.get_keycode = self._xlib_get_keycode
 			self._get_keysym = self._xlib_get_keysym
 			if not conn:
 				self.disp = Display()
@@ -394,7 +408,7 @@ class SystemHotkey(MixIn):
 			self.modders = xcb_modifiers	#tbd use the xcb modders
 			self.trivial_mods = xcb_trivial_mods
 			self._the_grab = self._xcb_the_grab
-			self._get_keycode = self._xcb_get_keycode
+			self.get_keycode = self._xcb_get_keycode
 			self._get_keysym = self._xcb_get_keysym
 			if not conn:
 				self.conn = xcffib.connect()
@@ -526,11 +540,14 @@ class SystemHotkey(MixIn):
 
 if __name__ == '__main__':
 	hk = SystemHotkey(use_xlib=False, verbose=1)	# xcb
-	hk.register(['k'], callback=lambda e: print('i am k'))
+	#~ hk.register(('k',), callback=lambda e: print('i am k'))
+	hk.register(('k',))
+	
 	#~ hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
 	#~ hk.register(('control','shift', 'k'), callback=lambda e: print('i am control shift k'))
 	#~ hk.register(('control','win', 'k'), callback=lambda e: print('i am control win k'))
 	#~ hk.register(['control','alt', 'k'], callback=lambda e: print('i am control alt k'))
+	#~ hk.register(['control','shift','win','alt', 'k'], callback=lambda e: print('i am control alt k'))
 
 	#~ hk.unregister(['k'])
 	#~ hk.unregister(('control','shift', 'k'))
