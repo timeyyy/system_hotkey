@@ -22,8 +22,12 @@ also install pywin32
 ####Linux
 
 
-For x11 you will should probably use the xcffib library, you will need the xcb bindings (bsd license) installed to use it (i think???)
-Also supported is the python xlib bindings (gpl license
+For x11 you will can either use the xcffib library (bsd license)
+Also supported is the python xlib bindings (gpl license)
+
+For debian
+
+sudo apt-get install python3-xlib
 
 
 Usage:
