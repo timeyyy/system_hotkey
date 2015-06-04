@@ -35,7 +35,7 @@ Usage
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
-To unregister a hotkey::
+To unregister a hotkey
 
 .. code-block:: python
 
