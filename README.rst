@@ -13,8 +13,7 @@ Osx support is coming in a few years i would say!
 Installation
 ------------
 
-| the old 
-| ``pip3 install system_hotkeys``
+| the old *pip3 install system_hotkeys*
 | should do the trick
 
 
