@@ -27,8 +27,7 @@ Linux
 
 
 Usage:
-------
-::
+------::
 	from system_hotkey import SystemHotkesry
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
