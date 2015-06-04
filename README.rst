@@ -19,7 +19,7 @@ Installation
 
 
 Windows
-^^^^^^^
+"""""""
 install pywin32
 
 
