@@ -22,8 +22,8 @@ also install pywin32
 Linux
 ^^^^^
 
-For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
-or you may use the python xlib bindings (gpl license)
+| For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
+| or you may use the python xlib bindings (gpl license)
 
 
 Usage:
