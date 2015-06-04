@@ -26,7 +26,7 @@ Linux
 | or you may use the python xlib bindings (gpl license)
 
 
-Usage:::
+Usage::
 ------
 
 	from system_hotkey import SystemHotkesry
