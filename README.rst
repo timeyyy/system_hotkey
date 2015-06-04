@@ -12,19 +12,16 @@ Osx support is coming in a few years i would say!
 
 Installation
 ------------
-
 | the old 
 | *pip3 install system_hotkeys*
 | should do the trick
-| 
 
-**Windows**
-
+Windows
+^^^^^^^
 install pywin32
 
-
-**Linux**
-
+Linux
+^^^^^
 | For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
 | or you may use the python xlib bindings (gpl license)
 
