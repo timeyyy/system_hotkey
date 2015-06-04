@@ -30,7 +30,7 @@ Usage:
 ------
 
 .. code:: python
-from system_hotkey import SystemHotkesry
+	from system_hotkey import SystemHotkesry
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
 	hk.unregister(('control', 'shift', 'h'))
