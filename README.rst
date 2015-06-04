@@ -43,7 +43,8 @@ To unregister a hotkey::
 	hk.unregister(('control', 'shift', 'h'))
 
 
-To not use the callback sytem you can do something like this::
+To handle the event yourself you can do something like this, please be aware this option is still
+under testing so it is advised to not use it::
 
 	def some_func(self, event, hotkey, args):	
 		pass	
