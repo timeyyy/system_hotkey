@@ -1,1 +1,4 @@
-Tiomthy Eichler
+Authors and Contributors
+========================
+
+Timothy Eichler

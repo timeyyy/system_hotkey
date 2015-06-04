@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from codecs import open 					
 import os
-here = os.path.path.abspath(os.path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
@@ -40,7 +40,7 @@ setup(
 		'Intended Audience :: Developers',
 		'Operating System :: OS Independent',
 		'Natural Language :: English',
-		'License :: OSI Approved :: BSD3 License',
+		'License :: OSI Approved :: BSD License',
 		# Specify the Python versions you support here. In particular, ensure
 		# that you indicate whether you support Python 2, Python 3 or both.
 		#~ 'Programming Language :: Python :: 2',

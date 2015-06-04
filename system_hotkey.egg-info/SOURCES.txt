@@ -1,3 +1,9 @@
+AUTHORS.rst
+DESCRIPTION.rst
+HISTORY.rst
+LICENSE
+MANIFEST.in
+README.rst
 setup.py
 system_hotkey/__init__.py
 system_hotkey/keysymdef.py
@@ -7,4 +13,5 @@ system_hotkey.egg-info/PKG-INFO
 system_hotkey.egg-info/SOURCES.txt
 system_hotkey.egg-info/dependency_links.txt
 system_hotkey.egg-info/pbr.json
+system_hotkey.egg-info/requires.txt
 system_hotkey.egg-info/top_level.txt
