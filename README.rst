@@ -20,7 +20,7 @@ Installation
 
 Windows
 ^^^^^^^
-also install pywin32
+install pywin32
 
 
 Linux
