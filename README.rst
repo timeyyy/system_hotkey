@@ -29,10 +29,11 @@ Linux
 Usage:
 ------
 
-``from system_hotkey import SystemHotkeys
+.. code:: python
+from system_hotkey import SystemHotkesry
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
-	hk.unregister(('control', 'shift', 'h'))``
+	hk.unregister(('control', 'shift', 'h'))
 
 
 To not use the callback sytem you can do something like this
