@@ -1,7 +1,7 @@
 
 
-System Hotkeys
-==============
+System Hotkey
+=============
 
 Multiplatform system wide hotkeys for python 3, 
 
@@ -34,7 +34,7 @@ Usage
 
 .. code-block:: python
 
-	from system_hotkey import SystemHotkesry
+	from system_hotkey import SystemHotkey
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
