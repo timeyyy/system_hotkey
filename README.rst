@@ -14,13 +14,13 @@ Installation
 the old "pip3 install system_hotkeys" should do the trick
 
 
-####Windows
-
+Windows
+^^^^^^^
 also install pywin32
 
 
-####Linux
-
+Linux
+^^^^^
 
 For x11 you will can either use the xcffib library (bsd license)
 Also supported is the python xlib bindings (gpl license)
