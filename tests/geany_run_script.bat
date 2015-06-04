@@ -1,4 +1,4 @@
-py.test
+python "test_hotkeys.py"
 
 pause
 del "%0"

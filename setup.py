@@ -1,41 +1,45 @@
-from setuptools import setup, find_packages # Always prefer setuptools over distutils
-from codecs import open 					# To use a consistent encoding
-from os import path
-here = path.abspath(path.dirname(__file__))
-# Get the long description from the relevant file
-with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
-	long_description = f.read()
+from setuptools import setup, find_packages
+from codecs import open 					
+import os
+here = os.path.path.abspath(path.dirname(__file__))
+
+def read(*paths):
+    """Build a file path from *paths* and return the contents."""
+    with open(os.path.join(*paths), 'r') as f:
+        return f.read()
+
+if os.name == 'nt':
+	REQUIRED = ['pywin32']
+else:
+	REQUIRED = []
+
 setup(
 	name = 'system_hotkey',
-	# Versions should comply with PEP440. For a discussion on single-sourcing
-	# the version across setup.py and the project code, see
-	# https://packaging.python.org/en/latest/single_source_version.html
-	version='1.0.0',
+
+	version='2015.6.4',
 	
-	description = 'System wide hotkeys easily!',
-	long_description =long_description,
+	description = 'System wide hotkeys',
+	long_description = (read('README.rst') + '\n\n' +
+                      read('HISTORY.rst') + '\n\n' +
+                      read('AUTHORS.rst'),
 	
-	# The project's main homepage.
 	url = 'https://github.com/timeyyy/system_hotkey',
 	
-	# Author details
 	author='timothy eichler',
 	author_email='tim_eichler@hotmail.com',
 	
-	# Choose your license
 	license='BSD3',
 	
 	# See https://pypi.python.org/pypi?%3Aaction=list_classifiers
 	classifiers=[
 		# How mature is this project? Common values are
-		# 3 - Alpha
+		#~ 3 - Alpha
 		# 4 - Beta
 		# 5 - Production/Stable
 		'Development Status :: 3 - Alpha',
-		# Indicate who your project is intended for
 		'Intended Audience :: Developers',
-		'Topic :: Software Development :: Build Tools',
-		# Pick your license as you wish (should match "license" above)
+		'Operating System :: OS Independent',
+		'Natural Language :: English',
 		'License :: OSI Approved :: BSD3 License',
 		# Specify the Python versions you support here. In particular, ensure
 		# that you indicate whether you support Python 2, Python 3 or both.
@@ -46,10 +50,11 @@ setup(
 		'Programming Language :: Python :: 3.2',
 		'Programming Language :: Python :: 3.3',
 		'Programming Language :: Python :: 3.4',
+		'Programming Language :: Python :: 3.5',
 	],
 
 	# What does your project relate to?
-	keywords = 'programming hotkeys python3 shortcutkeys shortuct',
+	keywords = 'hotkeys python3 shortcutkeys shortuct x11 windows',
 
 	# You can just specify the packages manually here if your project is
 	# simple. Or you can use find_packages().
@@ -59,7 +64,7 @@ setup(
 	# project is installed. For an analysis of "install_requires" vs pip's
 	# requirements files see:
 	# https://packaging.python.org/en/latest/requirements.html
-	#~ install_requires=['peppercorn'],
+	install_requires = REQUIRED,
 	
 	# List additional groups of dependencies here (e.g. development dependencies).
 	# You can install these using the following syntax, for example:

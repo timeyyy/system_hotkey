@@ -178,15 +178,13 @@ class MixIn():
 		to the consumer function
 		
 		Modifiers include
-		control	#TBD ADD SPACE??? 
+		control
 		shift
 		win
 		alt
-		e.g register()
-		
 		'''
 		assert type(hotkey) in (tuple, list)
-		if self.consumer == 'callback' and not callback:pass
+		if self.consumer == 'callback' and not callback:
 			raise TypeError('Function register requires callback argument in non sonsumer mode')
 		hotkey = self.order_hotkey(hotkey)
 		keycode, masks = self.parse_hotkeylist(hotkey)
@@ -299,17 +297,16 @@ class MixIn():
 			print('Keybinds , key here -> ', tuple(hotkey))
 			pprint(KEYBINDS)
 		yield KEYBINDS[tuple(hotkey)]
-	'''
-	this was for the event_type callback
-	def get_callback(self, hotkey ,event_type):
-		copy = list(hotkey)
-		copy.append(event_type)
-		if self.verbose:
-			print('Keybinds , key here -> ', tuple(copy))
-			pprint(KEYBINDS)
-		for func in KEYBINDS[tuple(copy)]:
-			yield func	
-	'''
+	
+	#~ this was for the event_type callback
+	#~ def get_callback(self, hotkey ,event_type):
+		#~ copy = list(hotkey)
+		#~ copy.append(event_type)
+		#~ if self.verbose:
+			#~ print('Keybinds , key here -> ', tuple(copy))
+			#~ pprint(KEYBINDS)
+		#~ for func in KEYBINDS[tuple(copy)]:
+			#~ yield func	
 	
 	def parse_event(self, event):
 		#Turns an event back into a hotkeylist
@@ -344,7 +341,9 @@ class SystemHotkey(MixIn):
 	hk_ref = {}	# used for windows
 	def __init__(self, consumer='callback', conn=None, use_xlib=True, verbose=False):
 		'''
-		consumer defaults to 'callback',...
+		consumer defaults to 'callback',...All calls to register will require a callback function
+		Other wise you can pass a fuction into consumer that can hanldle the event.
+		I wouldn't use this it's still being developed!
 		
 		set use_xlib to true to use the xlib python bindings (GPL) instead of the xcb ones (BSD) 
 		
@@ -540,14 +539,13 @@ class SystemHotkey(MixIn):
 
 if __name__ == '__main__':
 	hk = SystemHotkey(use_xlib=False, verbose=1)	# xcb
-	#~ hk.register(('k',), callback=lambda e: print('i am k'))
-	hk.register(('k',))
+	hk.register(('k',), callback=lambda e: print('i am k'))
 	
-	#~ hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
-	#~ hk.register(('control','shift', 'k'), callback=lambda e: print('i am control shift k'))
-	#~ hk.register(('control','win', 'k'), callback=lambda e: print('i am control win k'))
-	#~ hk.register(['control','alt', 'k'], callback=lambda e: print('i am control alt k'))
-	#~ hk.register(['control','shift','win','alt', 'k'], callback=lambda e: print('i am control alt k'))
+	hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
+	hk.register(('control','shift', 'k'), callback=lambda e: print('i am control shift k'))
+	hk.register(('control','win', 'k'), callback=lambda e: print('i am control win k'))
+	hk.register(['control','alt', 'k'], callback=lambda e: print('i am control alt k'))
+	hk.register(['control','shift','win','alt', 'k'], callback=lambda e: print('i am control alt shift win k'))
 
 	#~ hk.unregister(['k'])
 	#~ hk.unregister(('control','shift', 'k'))

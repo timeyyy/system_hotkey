@@ -1,20 +1,22 @@
 Metadata-Version: 1.1
 Name: system-hotkey
-Version: 1.0.0
-Summary: System wide hotkeys easily!
+Version: 2015.6.4
+Summary: System wide hotkeys
 Home-page: https://github.com/timeyyy/system_hotkey
 Author: timothy eichler
 Author-email: tim_eichler@hotmail.com
 License: BSD3
-Description: Multiplatform system wide hotkeys
+Description: Easily register and unregister system wide/global hotkeys for python 3 on either windows or linux
         
-Keywords: programming hotkeys python3 shortcutkeys shortuct
+Keywords: hotkeys python3 shortcutkeys shortuct x11 windows
 Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
-Classifier: Topic :: Software Development :: Build Tools
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: English
 Classifier: License :: OSI Approved :: BSD3 License
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.2
 Classifier: Programming Language :: Python :: 3.3
 Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
