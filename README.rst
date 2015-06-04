@@ -32,7 +32,7 @@ sudo apt-get install python3-xlib
 
 Usage:
 ------
-``python
+``
 from system_hotkey import SystemHotkeys
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
