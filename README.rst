@@ -38,7 +38,7 @@ Usage
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
 
-Press your hotkey etc::
+To unregister a hotkey::
 		
 	hk.unregister(('control', 'shift', 'h'))
 
