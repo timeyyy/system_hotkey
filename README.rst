@@ -28,8 +28,8 @@ Linux
 
 Usage
 ------
-::
 
+.. code-block:: python
 	from system_hotkey import SystemHotkesry
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
