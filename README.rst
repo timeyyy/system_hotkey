@@ -36,11 +36,13 @@ Usage
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
 To unregister a hotkey::
-		
+
+.. code-block:: python
+
 	hk.unregister(('control', 'shift', 'h'))
 
-
 There are api plans to allow something like the following
+
 .. code-block:: python
 
 	def some_func(self, event, hotkey, args):	
