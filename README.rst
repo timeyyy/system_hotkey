@@ -26,9 +26,9 @@ Linux
 | or you may use the python xlib bindings (gpl license)
 
 
-Usage::
+Usage
 ------
-
+::
 	from system_hotkey import SystemHotkesry
 		hk = SystemHotkeys()
 		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
