@@ -28,8 +28,8 @@ Linux
 
 Usage:
 ------
-``
-	from system_hotkey import SystemHotkeys
+
+``from system_hotkey import SystemHotkeys
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
 	hk.unregister(('control', 'shift', 'h'))
