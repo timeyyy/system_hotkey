@@ -3,9 +3,11 @@
 System Hotkeys
 ==============
 
-Multiplatform system wide hotkeys for python 3, no python2 support
+Multiplatform system wide hotkeys for python 3, 
 
-Atm support x11 and windows. Osx support is coming in a few years i would say!
+Currently no mac or  python2 support :(
+
+Osx support is coming in a few years i would say!
 
 
 Installation
