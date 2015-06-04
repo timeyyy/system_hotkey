@@ -14,7 +14,7 @@ Installation
 ------------
 
 the old 
-""pip3 install system_hotkeys"" should do the trick
+"pip3 install system_hotkeys" should do the trick
 
 
 Windows
