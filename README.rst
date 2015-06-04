@@ -50,4 +50,4 @@ There are api plans to allow something like the following::
 
 	hk = SystemHotkeys(consumer=some_func)
 
-
+So you have a master function that recieves all hotkey presses and can delegate as desired
