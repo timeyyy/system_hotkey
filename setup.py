@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from codecs import open 					
 import os
-here = os.path.path.abspath(path.dirname(__file__))
+here = os.path.path.abspath(os.path.dirname(__file__))
 
 def read(*paths):
     """Build a file path from *paths* and return the contents."""
@@ -16,12 +16,12 @@ else:
 setup(
 	name = 'system_hotkey',
 
-	version='2015.6.4',
+	version='0.1.0',
 	
 	description = 'System wide hotkeys',
 	long_description = (read('README.rst') + '\n\n' +
                       read('HISTORY.rst') + '\n\n' +
-                      read('AUTHORS.rst'),
+                      read('AUTHORS.rst')),
 	
 	url = 'https://github.com/timeyyy/system_hotkey',
 	
