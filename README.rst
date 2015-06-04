@@ -23,7 +23,7 @@ Linux
 ^^^^^
 
 | For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
-| or you may use the python xlib bindings (gpl license)::
+| or you may use the python xlib bindings (gpl license)
 
 
 Usage
@@ -32,7 +32,7 @@ Usage
 from system_hotkey import SystemHotkesry
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
-	hk.unregister(('control', 'shift', 'h'))
+	hk.unregister(('control', 'shift', 'h'))::
 
 
 To not use the callback sytem you can do something like this
