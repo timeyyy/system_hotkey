@@ -3,11 +3,11 @@
 System Hotkey
 =============
 
-Multiplatform system wide hotkeys for python 3, 
+Multi platform system wide hotkeys for python 3, 
 
 Currently no mac or  python2 support :(
 
-Osx support is coming in a few years i would say!
+Mac support is coming in a few years i would say!
 
 
 Installation
@@ -44,7 +44,7 @@ To unregister a hotkey
 
 	hk.unregister(('control', 'shift', 'h'))
 
-There are api plans to allow something like the following
+There are api plans to allow something like the following:
 
 .. code-block:: python
 
@@ -53,5 +53,5 @@ There are api plans to allow something like the following
 
 	hk = SystemHotkeys(consumer=some_func)
 
-So you have a master function that recieves all hotkey presses and can delegate as desired
+So you have a master function that receives all hotkey presses and can delegate as desired.
 
