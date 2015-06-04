@@ -12,6 +12,7 @@ Osx support is coming in a few years i would say!
 
 Installation
 ------------
+
 | the old 
 | *pip3 install system_hotkeys*
 | should do the trick
@@ -26,8 +27,10 @@ Linux
 | or you may use the python xlib bindings (gpl license)
 
 
+
 Usage
 ------
+
 
 .. code-block:: python
 
@@ -51,3 +54,4 @@ There are api plans to allow something like the following
 	hk = SystemHotkeys(consumer=some_func)
 
 So you have a master function that recieves all hotkey presses and can delegate as desired
+
