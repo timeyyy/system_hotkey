@@ -32,19 +32,19 @@ sudo apt-get install python3-xlib
 
 Usage:
 ------
-```python
+``python
 from system_hotkey import SystemHotkeys
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy hotkeys 123!!!"))
 	hk.unregister(('control', 'shift', 'h'))
-```
+``
 
 To not use the callback sytem you can do something like this
 
-```python
+``python
 def some_func(self, event, hotkey, args):	
 	pass	
 
 hk = SystemHotkeys(consumer=some_func)
-```
+``
 
