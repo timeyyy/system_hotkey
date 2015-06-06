@@ -1,0 +1,11 @@
+system_hotkey/keysymdef.py,sha256=ynqOFtrJTJKeI6m6B8EWKDfbfG5M_XmLDLYw9K9ZGk8,57192
+system_hotkey/system_hotkey.py,sha256=KBwhzNf9AWOaXYCBL0Mk0XClx_FxR152ED7UWCttg1I,17389
+system_hotkey/xpybutil_keybind.py,sha256=IIz3Trua3PPfBSa128P0sQgkZnjpgLjHEuvsMSwR72U,15369
+system_hotkey/__init__.py,sha256=iEO3OP3flPlnK2h71O0O6WZqbPMYp00vdTDslQZD3Ro,29
+system_hotkey-0.1.0.dist-info/DESCRIPTION.rst,sha256=bM8qB_TJaiKTDHjPjOCNdhDckzNq0ZoIPZv0Ar54poY,1165
+system_hotkey-0.1.0.dist-info/METADATA,sha256=eQB_6D2uh8rkNUjuFBgVb5Xw4iik3b1w6pEvuX4MPaw,1955
+system_hotkey-0.1.0.dist-info/metadata.json,sha256=DUGnB0sFf8al4XFQKvw4tlsoz9caui2pHPHKlC1OgWs,961
+system_hotkey-0.1.0.dist-info/pbr.json,sha256=suD6uCqcOIG7l9RNC38v6ymqo_8gbzU24Po2yv5aGxk,47
+system_hotkey-0.1.0.dist-info/RECORD,,
+system_hotkey-0.1.0.dist-info/top_level.txt,sha256=-sgFh0zW4BuVMiol1_qB8QLDPZc9-brD78Ferfrw1l4,14
+system_hotkey-0.1.0.dist-info/WHEEL,sha256=R7GZBaynU7P7eIwbsGv7F-X8eM9JWO6nKzGDfrA5_lo,97

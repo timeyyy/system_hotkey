@@ -1,0 +1,98 @@
+Metadata-Version: 2.0
+Name: system-hotkey
+Version: 0.1.0
+Summary: System wide hotkeys
+Home-page: https://github.com/timeyyy/system_hotkey
+Author: timothy eichler
+Author-email: tim_eichler@hotmail.com
+License: BSD3
+Keywords: hotkeys python3 shortcutkeys shortuct x11 windows
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Operating System :: OS Independent
+Classifier: Natural Language :: English
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Requires-Dist: pywin32
+
+
+
+System Hotkey
+=============
+
+Multi platform system wide hotkeys for python 3, 
+
+Currently no mac or  python2 support :(
+
+Mac support is coming in a few years i would say!
+
+
+Installation
+------------
+
+| the old 
+| ``pip3 install system_hotkey``
+| should do the trick
+
+Windows
+^^^^^^^
+install pywin32
+
+Linux
+^^^^^
+| For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
+| or you may use the python xlib bindings (gpl license)
+
+
+
+Usage
+------
+
+
+.. code-block:: python
+
+	from system_hotkey import SystemHotkey
+		hk = SystemHotkeys()
+		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
+
+To unregister a hotkey
+
+.. code-block:: python
+
+	hk.unregister(('control', 'shift', 'h'))
+
+There are api plans to allow something like the following:
+
+.. code-block:: python
+
+	def some_func(self, event, hotkey, args):	
+		pass	
+
+	hk = SystemHotkeys(consumer=some_func)
+
+So you have a master function that receives all hotkey presses and can delegate as desired.
+
+
+
+Original Release
+================
+
+To be done
+----------
+
+Mac support
+
+eta > 6 months
+
+
+Authors and Contributors
+========================
+
+Timothy Eichler
+
+

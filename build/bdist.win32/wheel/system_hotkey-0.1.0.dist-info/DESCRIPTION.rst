@@ -35,8 +35,8 @@ Usage
 .. code-block:: python
 
 	from system_hotkey import SystemHotkey
-	hk = SystemHotkeys()
-	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
+		hk = SystemHotkeys()
+		hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
 To unregister a hotkey
 
@@ -54,4 +54,23 @@ There are api plans to allow something like the following:
 	hk = SystemHotkeys(consumer=some_func)
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
+
+
+
+Original Release
+================
+
+To be done
+----------
+
+Mac support
+
+eta > 6 months
+
+
+Authors and Contributors
+========================
+
+Timothy Eichler
+
 

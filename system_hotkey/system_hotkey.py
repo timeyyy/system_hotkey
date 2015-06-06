@@ -1,7 +1,3 @@
-#https://wiki.python.org/moin/AppsWithPythonScripting
-#~ http://msdn.microsoft.com/en-us/library/ms927178.aspx
-#http://www.kbdedit.com/manual/low_level_vk_list.html
-#http://stackoverflow.com/questions/14076207/simulating-a-key-press-event-in-python-2-7	#TBD WINDOWS KEY UP /DOWN ?
 import os
 import _thread as thread 										
 import queue
@@ -554,3 +550,8 @@ if __name__ == '__main__':
 	#~ hk.register(('control','shift', 'k'), callback=lambda e: print('i am con shift k2'))
 	while 1:
 		pass
+# Refernces # 
+#https://wiki.python.org/moin/AppsWithPythonScripting
+#~ http://msdn.microsoft.com/en-us/library/ms927178.aspx
+#http://www.kbdedit.com/manual/low_level_vk_list.html
+#http://stackoverflow.com/questions/14076207/simulating-a-key-press-event-in-python-2-7	#TBD WINDOWS KEY UP /DOWN ?
