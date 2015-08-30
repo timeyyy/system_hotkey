@@ -55,3 +55,9 @@ There are api plans to allow something like the following:
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
 
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/timeyyy/system_hotkey/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
