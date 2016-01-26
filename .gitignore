@@ -3,6 +3,8 @@
 *.*~
 build/
 dist/
-system-hotkey.egg-info/
+*egg-info/
+*.bat
+.cache/
 
 
