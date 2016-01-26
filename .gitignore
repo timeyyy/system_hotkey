@@ -1,0 +1,8 @@
+*.pyc
+.idea/
+*.*~
+build/
+dist/
+system-hotkey.egg-info/
+
+
