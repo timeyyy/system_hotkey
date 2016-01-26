@@ -1,7 +1,8 @@
 import os
 import _thread as thread                                        
 import queue
-import time 
+import time
+import collections
 from pprint import pprint
 
 from timstools import unique_int
@@ -273,7 +274,7 @@ special_X_keysyms = {
     }
 
 class MixIn():
-    def register(self, hotkey, callback=None):
+    def register(self, hotkey, *args, callback=None):
         '''
         Add a system wide hotkey,
         
@@ -281,9 +282,9 @@ class MixIn():
         
         If the Systemhotkey class consumer attribute value is set to callback,
         callback will need to be a callable object that will be run
-        
-        Otherwise callback  is optionall and will be used as parameters
-        to the consumer function
+
+        Otherwise  pass in option arguments that will be passed to the
+        to consumer function
         
         Modifiers include
         control
@@ -291,7 +292,7 @@ class MixIn():
         win
         alt
         '''
-        assert type(hotkey) in (tuple, list)
+        assert isinstance(hotkey, collections.Iterable) and type(hotkey) not in (str, bytes)
         if self.consumer == 'callback' and not callback:
             raise TypeError('Function register requires callback argument in non sonsumer mode')
         
@@ -306,8 +307,12 @@ class MixIn():
             self.hk_action_queue.put(lambda:nt_register())
         else:
             self._the_grab(keycode, masks)
-                        
-        KEYBINDS[tuple(hotkey)] = callback
+
+        if callback:
+            KEYBINDS[tuple(hotkey)] = callback
+        else:
+            KEYBINDS[tuple(hotkey)] = args
+
     
         if self.verbose:
             print('Printing all keybinds')
@@ -584,9 +589,9 @@ class SystemHotkey(MixIn):
                     else:
                         hotkey = self.parse_event(mark_event_type(event))
                         if event.event_type == 'keypress':
-                            callbacks = [cb for cb in self.get_callback(hotkey)]
+                            args = [cb for cb in self.get_callback(hotkey)]
                             #~ callbacks = [cb for cb in self.get_callback(hotkey, event.event_type)]
-                            consumer(event, hotkey, callbacks)
+                            consumer(event, hotkey, args)
             thread.start_new_thread(thread_me,(),)
         else:
             print('You need to handle grabbing events yourself!')
@@ -673,10 +678,9 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    #~ def test_consumer()
-    
-    hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
-    hk.register(('f5',), callback=lambda e: print('fuck'))
+    hk = SystemHotkey(use_xlib=False, verbose=0)
+    # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
+    hk.register(('f5',), callback=lambda e: print('hi'))
     
     #~ hk.register(('k',), callback=lambda e: print('i am k'))
     #~ hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
