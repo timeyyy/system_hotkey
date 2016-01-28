@@ -44,7 +44,8 @@ To unregister a hotkey
 
 	hk.unregister(('control', 'shift', 'h'))
 
-There are api plans to allow something like the following:
+
+If you want you can pass in a custom consumer:
 
 .. code-block:: python
 
