@@ -5,7 +5,7 @@ import time
 import collections
 from pprint import pprint
 
-from timstools import unique_int
+from .util import unique_int
     
 KEYBINDS = {}
 CALLBACKS = {}  
@@ -416,7 +416,8 @@ class MixIn():
         try:
             yield KEYBINDS[tuple(hotkey)]
         except KeyError as err:
-            print('MFERROR', hotkey)
+            if self.verbose
+                print('MFERROR', hotkey)
             # If control was a keybind, and the user then presses
             # control XYZ, The control XYZ gets here somehow even though
             # its not a key bind...
