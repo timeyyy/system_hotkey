@@ -416,7 +416,7 @@ class MixIn():
         try:
             yield KEYBINDS[tuple(hotkey)]
         except KeyError as err:
-            if self.verbose
+            if self.verbose:
                 print('MFERROR', hotkey)
             # If control was a keybind, and the user then presses
             # control XYZ, The control XYZ gets here somehow even though
@@ -437,8 +437,13 @@ class MixIn():
     def parse_event(self, event):
         ''' Turns an event back into a hotkeylist'''
         hotkey = []
-        if os.name == 'posix':
-            hotkey += self.get_modifiersym(event.state) 
+        if os.name == 'posix':  
+            try:
+                hotkey += self.get_modifiersym(event.state) 
+            except AttributeError:
+                # When a new keyboard plugged in or numlock..
+                return None
+            
             hotkey.append(self._get_keysym(event.detail).lower())
         else:
             keycode, modifiers = self.hk_ref[event.wParam][0], self.hk_ref[event.wParam][1]
@@ -571,6 +576,8 @@ class SystemHotkey(MixIn):
                     else:
                         event = mark_event_type(event) 
                         hotkey = self.parse_event(event)
+                        if not hotkey:
+                            continue
                         #~ for cb in self.get_callback(hotkey, event.event_type):   #when i was using the keypress / keyrelease shit
                         for cb in self.get_callback(hotkey):
                             if event.event_type == 'keypress':
@@ -589,6 +596,8 @@ class SystemHotkey(MixIn):
                         pass    
                     else:
                         hotkey = self.parse_event(mark_event_type(event))
+                        if not hotkey:
+                            continue
                         if event.event_type == 'keypress':
                             args = [cb for cb in self.get_callback(hotkey)]
                             #~ callbacks = [cb for cb in self.get_callback(hotkey, event.event_type)]
