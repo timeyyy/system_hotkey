@@ -1,5 +1,3 @@
-
-
 System Hotkey
 =============
 
@@ -56,3 +54,14 @@ If you want you can pass in a custom consumer:
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
 
+Supported modifers include:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- control
+- shift
+- super (win key)
+- alt
+ 
+Features
+--------
+- Support for up to 3 modifyers and a key

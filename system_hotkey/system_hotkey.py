@@ -289,7 +289,7 @@ class MixIn():
         Modifiers include
         control
         shift
-        win
+        super
         alt
         '''
         assert isinstance(hotkey, collections.Iterable) and type(hotkey) not in (str, bytes)
