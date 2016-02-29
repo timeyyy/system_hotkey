@@ -16,7 +16,7 @@ REQUIRED = []
 setup(
 	name = 'system_hotkey',
 
-	version='0.1.3',
+	version='0.1.4',
 	
 	description = 'System wide hotkeys',
 	long_description = (read('README.rst') + '\n\n' +
