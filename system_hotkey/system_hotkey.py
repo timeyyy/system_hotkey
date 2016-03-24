@@ -360,7 +360,7 @@ class MixIn():
                     for mod in self.trivial_mods:
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
                 except xproto.BadAccess:
-                    raise SysHotkeyUnregisterError("Failed unregs")
+                    raise UnregisterError("Failed unregs")
     
     def order_hotkey(self, hotkey):
         # Order doesn't matter for modifiers, so we force an order here
@@ -415,14 +415,13 @@ class MixIn():
             pprint(KEYBINDS)
         try:
             yield KEYBINDS[tuple(hotkey)]
-        except KeyError as err:
+        except KeyError:
             if self.verbose:
                 print('MFERROR', hotkey)
             # If control was a keybind, and the user then presses
             # control XYZ, The control XYZ gets here somehow even though
             # its not a key bind...
             # Tbd check this applies also to windows
-            pass
     
     #~ this was for the event_type callback
     #~ def get_callback(self, hotkey ,event_type):
