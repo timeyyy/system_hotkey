@@ -19,18 +19,18 @@ if os.name == 'nt':
     PM_REMOVE = 0x0001
 
     vk_codes= { 
-        #~ 'F1':win32con.VK_F1,
-        #~ 'F2':win32con.VK_F2,
-        #~ 'F3':win32con.VK_F3,
-        #~ 'F4':win32con.VK_F4,
-        #~ 'F5':win32con.VK_F5,
-        #~ 'F6':win32con.VK_F6,
-        #~ 'F7':win32con.VK_F7,
-        #~ 'F8':win32con.VK_F8,
-        #~ 'F9':win32con.VK_F9,
-        #~ 'F10':win32con.VK_F10,
-        #~ 'F11':win32con.VK_F11,
-        #~ 'F12':win32con.VK_F12,
+        # 'F1':win32con.VK_F1,
+        # 'F2':win32con.VK_F2,
+        # 'F3':win32con.VK_F3,
+        # 'F4':win32con.VK_F4,
+        # 'F5':win32con.VK_F5,
+        # 'F6':win32con.VK_F6,
+        # 'F7':win32con.VK_F7,
+        # 'F8':win32con.VK_F8,
+        # 'F9':win32con.VK_F9,
+        # 'F10':win32con.VK_F10,
+        # 'F11':win32con.VK_F11,
+        # 'F12':win32con.VK_F12,
         'a':0x41,
         'b':0x42,
         'c':0x43,
@@ -138,22 +138,22 @@ if os.name == 'nt':
         , "f24": win32con.VK_F24
         }   
     win_modders = {
-        #~ 'control':2,
-        #~ 'shift':4,
-        #~ 'alt': 1,
-        #~ 'super':8,
+        # 'control':2,
+        # 'shift':4,
+        # 'alt': 1,
+        # 'super':8,
         "shift": win32con.MOD_SHIFT
         ,"control": win32con.MOD_CONTROL
         ,"alt": win32con.MOD_ALT
         ,"super": win32con.MOD_WIN
         }
-        
+       
 else:
     try:
         from . import xpybutil_keybind as keybind
     except SystemError:
         import xpybutil_keybind as keybind
-    
+
     try:
         import xcffib           # the xproto con will not work unlesss you inport this first
         from xcffib import xproto
@@ -215,14 +215,14 @@ else:
             '}' : "braceright",
             '~' : "asciitilde"
             }
-        
+       
         xlib_modifiers = {
             'control' : X.ControlMask,
             'shift' :  X.ShiftMask,
             'alt' : X.Mod1Mask,
             'super' : X.Mod4Mask
             }
-        
+       
         xlib_trivial_mods = (   # not working at all !
             0,
             X.LockMask,
@@ -632,57 +632,65 @@ class SystemHotkey(MixIn):
             try:                                            
                 remove_or_add = self.hk_action_queue.get(block=False)
             except queue.Empty:
-                pass    
+                pass
             else:
-                remove_or_add() 
+                remove_or_add()
             # Checking the windows message Queue
-            if user32.PeekMessageA(byref(msg), 0, 0, 0, PM_REMOVE): 
-                if msg.message == win32con.WM_HOTKEY:           
-                    self.data_queue.put(msg)                        
+            if user32.PeekMessageA(byref(msg), 0, 0, 0, PM_REMOVE):
+                if msg.message == win32con.WM_HOTKEY: 
+                    self.data_queue.put(msg)
                 else:
                     print('some other message')
             time.sleep(self.check_queue_interval)
 
-    def _nt_get_keycode(self, key, disp=None):  
+    def _nt_get_keycode(self, key, disp=None):
         return vk_codes[key]
-    
+
     def _nt_get_keysym(self, keycode):
         for key, value in vk_codes.items():
             if value == keycode:
                 return key
-    
+
     def _nt_the_grab(self, keycode, masks, id, root=None):
         if not user32.RegisterHotKey(None, id, masks, keycode):
-            raise RegisterError('The bind is probably already in use elsewhere on the system')  #TBD RAISE RROR ON LINUX SYSTEMS
-            
+            keysym = self._nt_get_keysym(keycode)
+            msg = 'The bind could be in use elsewhere: ' + keysym
+            raise RegisterError(msg)
+
     def _xlib_get_keycode(self, key) :
         keysym = XK.string_to_keysym(key)
         if keysym == 0:
             keysym = XK.string_to_keysym(special_X_keysyms[key])
         keycode = self.disp.keysym_to_keycode(keysym)
         return keycode
-    
+
     def _xlib_get_keysym(self, keycode, i=0):
         keysym = self.disp.keycode_to_keysym(keycode, i)
-        return keybind.keysym_strings.get(keysym, [None])[0] #https://lists.gnu.org/archive/html/stumpwm-devel/2006-04/msg00033.html
-        
+        # https://lists.gnu.org/archive/html/stumpwm-devel/2006-04/msg00033.html
+        return keybind.keysym_strings.get(keysym, [None])[0]
+       
     def _xlib_the_grab(self, keycode, masks):
-        #TBD error handlig  http://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html
-        #~ try:
+        # Todo error handlig  http://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html
+        # try:
         self.xRoot.grab_key(keycode, masks, 1, X.GrabModeAsync, X.GrabModeAsync)
-        #~ except Xlib.error.BadAccess:
-            #~ raise RegisterError('The bind is probably already in use elsewhere on the system')
+        # except Xlib.error.BadAccess:
+            # raise RegisterError('The bind is probably already in use elsewhere on the system')
 
     def _xcb_the_grab(self, keycode, masks):
         try:
             for triv_mod in self.trivial_mods:
-                self.conn.core.GrabKeyChecked(True, self.root, triv_mod | masks, keycode, xproto.GrabMode.Async, xproto.GrabMode.Async).check()
+                self.conn.core.GrabKeyChecked(
+                        True,
+                        self.root, triv_mod | masks, keycode,
+                        xproto.GrabMode.Async, xproto.GrabMode.Async).check()
         except xproto.AccessError:
-            raise RegisterError('The bind is probably already in use elsewhere on the system')
-             
+            keysym = self._xcb_get_keysym(keycode)
+            msg = 'The bind could be in use elsewhere: ' + keysym
+            raise RegisterError(msg)
+         
     def _xcb_get_keycode(self, key):
         return keybind.lookup_string(key)
-    
+
     def _xcb_get_keysym(self, keycode, i=0):
         keysym = keybind.get_keysym(keycode, i)
         return keybind.keysym_strings.get(keysym, [None])[0]
@@ -691,19 +699,19 @@ if __name__ == '__main__':
     hk = SystemHotkey(use_xlib=False, verbose=0)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
     hk.register(('f5',), callback=lambda e: print('hi'))
-    
-    #~ hk.register(('k',), callback=lambda e: print('i am k'))
-    #~ hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
-    #~ hk.register(('control','shift', 'k'), callback=lambda e: print('i am control shift k'))
-    #~ hk.register(('control','super', 'k'), callback=lambda e: print('i am control win k'))
-    #~ hk.register(['control','alt', 'k'], callback=lambda e: print('i am control alt k'))
-    #~ hk.register(['control','shift','super','alt', 'k'], callback=lambda e: print('i am control alt shift win k'))
 
-    #~ hk.unregister(['k'])
-    #~ hk.unregister(('control','shift', 'k'))
+    # hk.register(('k',), callback=lambda e: print('i am k'))
+    # hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
+    # hk.register(('control','shift', 'k'), callback=lambda e: print('i am control shift k'))
+    # hk.register(('control','super', 'k'), callback=lambda e: print('i am control win k'))
+    # hk.register(['control','alt', 'k'], callback=lambda e: print('i am control alt k'))
+    # hk.register(['control','shift','super','alt', 'k'], callback=lambda e: print('i am control alt shift win k'))
 
-    #~ hk.register(['k'], callback=lambda e: print('i am k2'))
-    #~ hk.register(('control','shift', 'k'), callback=lambda e: print('i am con shift k2'))
+    # hk.unregister(['k'])
+    # hk.unregister(('control','shift', 'k'))
+
+    # hk.register(['k'], callback=lambda e: print('i am k2'))
+    # hk.register(('control','shift', 'k'), callback=lambda e: print('i am con shift k2'))
     while 1:
         pass
 
