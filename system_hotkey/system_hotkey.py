@@ -4,9 +4,20 @@ import queue
 import time
 import collections
 from pprint import pprint
+import struct
 
-from .util import unique_int
+try:
+    from .util import unique_int
+except SystemError:
+    from util import unique_int
     
+
+class SystemHotkeyError(Exception):pass
+class RegisterError(SystemHotkeyError):pass 
+class UnregisterError(SystemHotkeyError):pass   
+class InvalidKeyError(RegisterError):pass   
+
+
 KEYBINDS = {}
 CALLBACKS = {}  
     
@@ -231,8 +242,7 @@ else:
     except ImportError:
         pass
         
-class RegisterError(Exception):pass 
-class UnregisterError(Exception):pass   
+
 special_X_keysyms = {
     ' ' : "space",
     '\t' : "Tab",
@@ -659,7 +669,11 @@ class SystemHotkey(MixIn):
     def _xlib_get_keycode(self, key) :
         keysym = XK.string_to_keysym(key)
         if keysym == 0:
-            keysym = XK.string_to_keysym(special_X_keysyms[key])
+            try:
+                keysym = XK.string_to_keysym(special_X_keysyms[key])
+            except KeyError:
+                msg = 'Unable to Register, Key not understood by systemhotkey'
+                raise InvalidKeyError(msg)
         keycode = self.disp.keysym_to_keycode(keysym)
         return keycode
 
@@ -678,10 +692,14 @@ class SystemHotkey(MixIn):
     def _xcb_the_grab(self, keycode, masks):
         try:
             for triv_mod in self.trivial_mods:
-                self.conn.core.GrabKeyChecked(
+                try:
+                    self.conn.core.GrabKeyChecked(
                         True,
                         self.root, triv_mod | masks, keycode,
                         xproto.GrabMode.Async, xproto.GrabMode.Async).check()
+                except struct.error: 
+                    msg = 'Unable to Register, Key not understood by systemhotkey'
+                    raise InvalidKeyError(msg)
         except xproto.AccessError:
             keysym = self._xcb_get_keysym(keycode)
             msg = 'The bind could be in use elsewhere: ' + keysym
@@ -695,9 +713,10 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    hk = SystemHotkey(use_xlib=False, verbose=0)
+    hk = SystemHotkey(use_xlib=False, verbose=1)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
-    hk.register(('f5',), callback=lambda e: print('hi'))
+    hk.register(('control','shift','KP_6',), callback=lambda e: print('hi'))
+    hk.register(('control','shift','a',), callback=lambda e: pprint(KEYBINDS))
 
     # hk.register(('k',), callback=lambda e: print('i am k'))
     # hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
