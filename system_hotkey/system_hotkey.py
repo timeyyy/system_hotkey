@@ -1,5 +1,5 @@
 import os
-import _thread as thread                                        
+import _thread as thread
 import queue
 import time
 import collections
@@ -13,14 +13,13 @@ except SystemError:
     
 
 class SystemHotkeyError(Exception):pass
-class RegisterError(SystemHotkeyError):pass 
+class SystemRegisterError(SystemHotkeyError):pass 
 class UnregisterError(SystemHotkeyError):pass   
-class InvalidKeyError(RegisterError):pass   
-
+class InvalidKeyError(SystemHotkeyError):pass   
 
 KEYBINDS = {}
 CALLBACKS = {}  
-    
+
 if os.name == 'nt':
     import ctypes
     from ctypes import wintypes
@@ -129,7 +128,7 @@ if os.name == 'nt':
         ,"alt": win32con.MOD_ALT
         ,"super": win32con.MOD_WIN
         }
-       
+    # Todo test trivial_mods
 else:
     try:
         from . import xpybutil_keybind as keybind
@@ -147,7 +146,7 @@ else:
             'alt' : xproto.ModMask._1,
             'super' : xproto.ModMask._4 
             }
-        xcb_trivial_mods = (    # TBD woring for caps loc and scroll loc but not numloc
+        xcb_trivial_mods = (
             0,
             xproto.ModMask.Lock,
             xproto.ModMask._2,
@@ -205,7 +204,7 @@ else:
             'super' : X.Mod4Mask
             }
        
-        xlib_trivial_mods = (   # not working at all !
+        xlib_trivial_mods = (   # only working for scrollock
             0,
             X.LockMask,
             X.Mod2Mask,
@@ -254,6 +253,33 @@ special_X_keysyms = {
     '~' : "asciitilde"
     }
 
+class Aliases():
+    '''
+    Easily check if something is an alias of other things
+    '''
+    def __init__(self, *aliases):
+        self.aliases = {} 
+        for values in aliases:
+            assert isinstance(values, tuple)
+            for val in values:
+                self.aliases[val] = values
+
+    def get(self, thing, nonecase=None):
+        return self.aliases.get(thing, nonecase)
+
+
+NUMPAD_ALIASES = Aliases(
+        ('kp_1', 'kp_end',),
+        ('kp_2', 'kp_down',),
+        ('kp_3', 'kp_next', 'kp_page_down'),
+        ('kp_4', 'kp_left',),
+        ('kp_5', 'kp_begin',),
+        ('kp_6', 'kp_right',),
+        ('kp_7', 'kp_home',),
+        ('kp_8', 'kp_up',),
+        ('kp_9', 'kp_prior', 'kp_page_up'),
+        )
+
 class MixIn():
     def register(self, hotkey, *args, callback=None):
         '''
@@ -279,7 +305,7 @@ class MixIn():
         
         hotkey = self.order_hotkey(hotkey)
         keycode, masks = self.parse_hotkeylist(hotkey)
-        
+
         if os.name == 'nt':
             def nt_register():
                 uniq = unique_int(self.hk_ref.keys())
@@ -293,7 +319,6 @@ class MixIn():
             KEYBINDS[tuple(hotkey)] = callback
         else:
             KEYBINDS[tuple(hotkey)] = args
-
     
         if self.verbose:
             print('Printing all keybinds')
@@ -368,16 +393,19 @@ class MixIn():
     def parse_hotkeylist(self, full_hotkey):
         # Returns keycodes and masks from a list of hotkey masks
         masks = []
-        #~ try:
         keycode = self.get_keycode(full_hotkey[-1])
-        #~ except KeyError:
-            #~ keycode = self.get_keycode(full_hotkey[-1])
+        if keycode is None:
+            key = full_hotkey[-1]
+            # Make sure kp keysare in the correct format
+            if key[:3].lower() == 'kp_':
+                keycode = self.get_keycode('KP_' + full_hotkey[-1][3:].capitalize())
+
         if len(full_hotkey) > 1:
             for item in full_hotkey[:-1]:
                 try:
                     masks.append(self.modders[item])
                 except KeyError:
-                    raise RegisterError('Modifier: %s not supported' % item)    #TBD rmeove how the keyerror gets displayed as well
+                    raise SystemRegisterError('Modifier: %s not supported' % item)    #TBD rmeove how the keyerror gets displayed as well
             masks = self.or_modifiers_together(masks)
         else:                               
             masks = 0
@@ -397,22 +425,34 @@ class MixIn():
         try:
             yield KEYBINDS[tuple(hotkey)]
         except KeyError:
+            # On Linux
+            # The event gets sent a few times to us with different
+            # Information about the modifyer, we just ignore failed attempts
             if self.verbose:
                 print('MFERROR', hotkey)
-            # If control was a keybind, and the user then presses
-            # control XYZ, The control XYZ gets here somehow even though
-            # its not a key bind...
-            # Tbd check this applies also to windows
-    
-    #~ this was for the event_type callback
-    #~ def get_callback(self, hotkey ,event_type):
-        #~ copy = list(hotkey)
-        #~ copy.append(event_type)
-        #~ if self.verbose:
-            #~ print('Keybinds , key here -> ', tuple(copy))
-            #~ pprint(KEYBINDS)
-        #~ for func in KEYBINDS[tuple(copy)]:
-            #~ yield func   
+            # Possible numpad key? The keysym can change if shift is pressed (only tested on linux)
+            # Todo test numpad bindings on a non english system
+            aliases = NUMPAD_ALIASES.get(hotkey[-1])
+            if aliases:
+                for key in aliases:
+                    try:
+                        new_hotkey = hotkey[:-1]
+                        new_hotkey.append(key)
+                        yield KEYBINDS[tuple(new_hotkey)]
+                        break
+                    except (KeyError, TypeError):
+                        if self.verbose:
+                            print('NUMERROR', new_hotkey)
+
+        # this was for the event_type callback
+        # def get_callback(self, hotkey ,event_type):
+            # copy = list(hotkey)
+            # copy.append(event_type)
+            # if self.verbose:
+                # print('Keybinds , key here -> ', tuple(copy))
+                # pprint(KEYBINDS)
+            # for func in KEYBINDS[tuple(copy)]:
+                # yield func   
 
     
     def parse_event(self, event):
@@ -462,16 +502,15 @@ class SystemHotkey(MixIn):
         if the consumer param = 'callback', -> All hotkeys will require
         a callback function
         
-        - Experimental! - 
         Otherwise set consumer to a function to hanlde the event.
-        parameters sent will be - event, hotkey, callbacks
-        event is the xwindow/microsoft keyboard eventm
+        the function signature: event, hotkey, args
+        event is the xwindow/microsoft keyboard event
         hotkey is a tuple,
-        callback is any info that you registerd with the hotkey
+        args is a list of any ars parsed in at the time of registering
         
         check_queue_interval is in seconds and sets the sleep time on
         checking the queue for hotkey presses
-        
+
         set use_xlib to true to use the xlib python bindings (GPL) instead of the xcb ones (BSD) 
         You can pass an exisiting X display or connection using the conn keyword,
         otherwise one will be created for you.
@@ -638,7 +677,7 @@ class SystemHotkey(MixIn):
         if not user32.RegisterHotKey(None, id, masks, keycode):
             keysym = self._nt_get_keysym(keycode)
             msg = 'The bind could be in use elsewhere: ' + keysym
-            raise RegisterError(msg)
+            raise SystemRegisterError(msg)
 
     def _xlib_get_keycode(self, key) :
         keysym = XK.string_to_keysym(key)
@@ -646,8 +685,7 @@ class SystemHotkey(MixIn):
             try:
                 keysym = XK.string_to_keysym(special_X_keysyms[key])
             except KeyError:
-                msg = 'Unable to Register, Key not understood by systemhotkey'
-                raise InvalidKeyError(msg)
+                return None
         keycode = self.disp.keysym_to_keycode(keysym)
         return keycode
 
@@ -659,9 +697,10 @@ class SystemHotkey(MixIn):
     def _xlib_the_grab(self, keycode, masks):
         # Todo error handlig  http://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html
         # try:
-        self.xRoot.grab_key(keycode, masks, 1, X.GrabModeAsync, X.GrabModeAsync)
+        for triv_mod in self.trivial_mods:
+            self.xRoot.grab_key(keycode, triv_mod | masks, 1, X.GrabModeAsync, X.GrabModeAsync)
         # except Xlib.error.BadAccess:
-            # raise RegisterError('The bind is probably already in use elsewhere on the system')
+            # raise SystemRegisterError('The bind is probably already in use elsewhere on the system')
 
     def _xcb_the_grab(self, keycode, masks):
         try:
@@ -671,13 +710,14 @@ class SystemHotkey(MixIn):
                         True,
                         self.root, triv_mod | masks, keycode,
                         xproto.GrabMode.Async, xproto.GrabMode.Async).check()
+                    print('added succss')
                 except struct.error: 
                     msg = 'Unable to Register, Key not understood by systemhotkey'
                     raise InvalidKeyError(msg)
         except xproto.AccessError:
             keysym = self._xcb_get_keysym(keycode)
             msg = 'The bind could be in use elsewhere: ' + keysym
-            raise RegisterError(msg)
+            raise SystemRegisterError(msg)
          
     def _xcb_get_keycode(self, key):
         return keybind.lookup_string(key)
@@ -687,10 +727,10 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    hk = SystemHotkey(use_xlib=False, verbose=1)
+    hk = SystemHotkey(use_xlib=True, verbose=1)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
-    hk.register(('control','shift','KP_6',), callback=lambda e: print('hi'))
-    hk.register(('control','shift','a',), callback=lambda e: pprint(KEYBINDS))
+    # hk.register(('a',), callback=lambda e: print('hi'))
+    hk.register(('shift','kp_3'), callback=lambda e: print('hi'))
 
     # hk.register(('k',), callback=lambda e: print('i am k'))
     # hk.register(['control', 'k'], callback=lambda e: print('i am control k'))

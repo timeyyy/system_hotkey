@@ -36,6 +36,15 @@ Usage
 	hk = SystemHotkeys()
 	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
+**Input Charachters**
+
+You can bind directly to symbols such as !@#$%^&*().
+Numpad keys can be bind by prefixing with kp_.
+
+Sysytem hotkeys uses the keysym names from xlib. You can
+see system_hotkeys.py for a list of avaliable chars.
+If you are unable to bind to a certain key please let us know.
+
 To unregister a hotkey
 
 .. code-block:: python
@@ -64,3 +73,9 @@ Supported modifers include:
 Features
 --------
 - Support for up to 3 modifyers and a key
+
+Limitations
+-----------
+- I have only mapped most common keys, i have not experimented with unicode/japanese charchters etc. It's only a matter of mapping a name to the keysym on linux and virtual key code on windows.
+
+- Default non-midifyable (no current need to change this) behavior is to ignore the state of the numlock and capslock key. i.e binding to kp_left (key pad left) will also bind to kp_4
