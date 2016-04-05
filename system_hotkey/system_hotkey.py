@@ -30,18 +30,6 @@ if os.name == 'nt':
     PM_REMOVE = 0x0001
 
     vk_codes= { 
-        # 'F1':win32con.VK_F1,
-        # 'F2':win32con.VK_F2,
-        # 'F3':win32con.VK_F3,
-        # 'F4':win32con.VK_F4,
-        # 'F5':win32con.VK_F5,
-        # 'F6':win32con.VK_F6,
-        # 'F7':win32con.VK_F7,
-        # 'F8':win32con.VK_F8,
-        # 'F9':win32con.VK_F9,
-        # 'F10':win32con.VK_F10,
-        # 'F11':win32con.VK_F11,
-        # 'F12':win32con.VK_F12,
         'a':0x41,
         'b':0x42,
         'c':0x43,
@@ -82,47 +70,34 @@ if os.name == 'nt':
         , "down": win32con.VK_DOWN
         , "left": win32con.VK_LEFT
         , "right": win32con.VK_RIGHT
-        , "pgup": win32con.VK_PRIOR
-        , "pgdown": win32con.VK_NEXT
+        , "prior": win32con.VK_PRIOR
+        , "next": win32con.VK_NEXT
         , "home": win32con.VK_HOME
         , "end": win32con.VK_END
         , "insert": win32con.VK_INSERT
-        , "enter": win32con.VK_RETURN
         , "return": win32con.VK_RETURN
         , "tab": win32con.VK_TAB
         , "space": win32con.VK_SPACE
         , "backspace": win32con.VK_BACK
         , "delete": win32con.VK_DELETE
-        , "del": win32con.VK_DELETE
-        , "apps": win32con.VK_APPS
-        , "popup": win32con.VK_APPS
         , "escape": win32con.VK_ESCAPE
-        , "npmul": win32con.VK_MULTIPLY
-        , "npadd": win32con.VK_ADD
-        , "npsep": win32con.VK_SEPARATOR
-        , "npsub": win32con.VK_SUBTRACT
-        , "npdec": win32con.VK_DECIMAL
-        , "npdiv": win32con.VK_DIVIDE
-        , "np0": win32con.VK_NUMPAD0
-        , "numpad0": win32con.VK_NUMPAD0
-        , "np1": win32con.VK_NUMPAD1
-        , "numpad1": win32con.VK_NUMPAD1
-        , "np2": win32con.VK_NUMPAD2
-        , "numpad2": win32con.VK_NUMPAD2
-        , "np3": win32con.VK_NUMPAD3
-        , "numpad3": win32con.VK_NUMPAD3
-        , "np4": win32con.VK_NUMPAD4
-        , "numpad4": win32con.VK_NUMPAD4
-        , "np5": win32con.VK_NUMPAD5
-        , "numpad5": win32con.VK_NUMPAD5
-        , "np6": win32con.VK_NUMPAD6
-        , "numpad6": win32con.VK_NUMPAD6
-        , "np7": win32con.VK_NUMPAD7
-        , "numpad7": win32con.VK_NUMPAD7
-        , "np8": win32con.VK_NUMPAD8
-        , "numpad8": win32con.VK_NUMPAD8
-        , "np9": win32con.VK_NUMPAD9
-        , "numpad9": win32con.VK_NUMPAD9
+        , "pause": win32con.VK_PAUSE
+        , "kp_multiply": win32con.VK_MULTIPLY
+        , "kp_add": win32con.VK_ADD
+        , "kp_separator": win32con.VK_SEPARATOR
+        , "kp_subtract": win32con.VK_SUBTRACT
+        , "kp_decimal": win32con.VK_DECIMAL
+        , "kp_divide": win32con.VK_DIVIDE
+        , "kp_0": win32con.VK_NUMPAD0
+        , "kp_1": win32con.VK_NUMPAD1
+        , "kp_2": win32con.VK_NUMPAD2
+        , "kp_3": win32con.VK_NUMPAD3
+        , "kp_4": win32con.VK_NUMPAD4
+        , "kp_5": win32con.VK_NUMPAD5
+        , "kp_6": win32con.VK_NUMPAD6
+        , "kp_7": win32con.VK_NUMPAD7
+        , "kp_8": win32con.VK_NUMPAD8
+        , "kp_9": win32con.VK_NUMPAD9
         , "f1": win32con.VK_F1
         , "f2": win32con.VK_F2
         , "f3": win32con.VK_F3
@@ -149,10 +124,6 @@ if os.name == 'nt':
         , "f24": win32con.VK_F24
         }   
     win_modders = {
-        # 'control':2,
-        # 'shift':4,
-        # 'alt': 1,
-        # 'super':8,
         "shift": win32con.MOD_SHIFT
         ,"control": win32con.MOD_CONTROL
         ,"alt": win32con.MOD_ALT
@@ -442,6 +413,7 @@ class MixIn():
             #~ pprint(KEYBINDS)
         #~ for func in KEYBINDS[tuple(copy)]:
             #~ yield func   
+
     
     def parse_event(self, event):
         ''' Turns an event back into a hotkeylist'''
@@ -461,6 +433,7 @@ class MixIn():
         if self.verbose:
             print('hotkey ', hotkey)
         return hotkey
+
     
     def get_modifiersym(self, state):
         ret = []
@@ -473,6 +446,7 @@ class MixIn():
         if state & self.modders['super']:
             ret.append('super')
         return ret
+
     
 class SystemHotkey(MixIn):
     '''
