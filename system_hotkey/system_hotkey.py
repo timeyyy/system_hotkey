@@ -66,13 +66,21 @@ if os.name == 'nt':
         '8':0x38,
         '9':0x39,
         "up": win32con.VK_UP
+        , "kp_up": win32con.VK_UP
         , "down": win32con.VK_DOWN
+        , "kp_down": win32con.VK_DOWN
         , "left": win32con.VK_LEFT
+        , "kp_left": win32con.VK_LEFT
         , "right": win32con.VK_RIGHT
+        , "kp_right": win32con.VK_RIGHT
         , "prior": win32con.VK_PRIOR
+        , "kp_prior": win32con.VK_PRIOR
         , "next": win32con.VK_NEXT
+        , "kp_next": win32con.VK_NEXT
         , "home": win32con.VK_HOME
+        , "kp_home": win32con.VK_HOME
         , "end": win32con.VK_END
+        , "kp_end": win32con.VK_END
         , "insert": win32con.VK_INSERT
         , "return": win32con.VK_RETURN
         , "tab": win32con.VK_TAB
@@ -128,7 +136,13 @@ if os.name == 'nt':
         ,"alt": win32con.MOD_ALT
         ,"super": win32con.MOD_WIN
         }
-    # Todo test trivial_mods
+    win_trivial_mods = (
+        0,
+  #      win32con.CAPSLOCK_ON,
+        win32con.NUMLOCK_ON,
+  #      win32con.NUMLOCK_ON | win32con.CAPSLOCK_ON
+
+        )
 else:
     try:
         from . import xpybutil_keybind as keybind
@@ -393,12 +407,16 @@ class MixIn():
     def parse_hotkeylist(self, full_hotkey):
         # Returns keycodes and masks from a list of hotkey masks
         masks = []
-        keycode = self.get_keycode(full_hotkey[-1])
+        keycode = self._get_keycode(full_hotkey[-1])
         if keycode is None:
             key = full_hotkey[-1]
             # Make sure kp keysare in the correct format
             if key[:3].lower() == 'kp_':
-                keycode = self.get_keycode('KP_' + full_hotkey[-1][3:].capitalize())
+                keycode = self._get_keycode('KP_' + full_hotkey[-1][3:].capitalize())
+            if keycode is None:
+                msg = 'Unable to Register, Key not understood by systemhotkey'
+                raise InvalidKeyError(msg)
+
 
         if len(full_hotkey) > 1:
             for item in full_hotkey[:-1]:
@@ -497,7 +515,7 @@ class SystemHotkey(MixIn):
     limitation of the keyboard and operating systems not this library
     ''' 
     hk_ref = {} 
-    def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False):
+    def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=False):
         '''
         if the consumer param = 'callback', -> All hotkeys will require
         a callback function
@@ -514,6 +532,11 @@ class SystemHotkey(MixIn):
         set use_xlib to true to use the xlib python bindings (GPL) instead of the xcb ones (BSD) 
         You can pass an exisiting X display or connection using the conn keyword,
         otherwise one will be created for you.
+
+        keybinds will work regardless if numlock/capslock are on/off.
+        If you would like numpad keys to have the same function
+        when numlock is on or off set unite_kp to True
+
         '''
         # Changes the class methods to point to differenct functions 
         # Depening on the operating system and library used
@@ -525,6 +548,7 @@ class SystemHotkey(MixIn):
         self.use_xlib = use_xlib
         self.consumer = consumer
         self.check_queue_interval = check_queue_interval
+        self.unite_kp = unite_kp
         def mark_event_type(event):
             # event gets an event_type attribute so the user has a portiabble way
             # actually on windows as far as i know you dont have the option of binding on keypress or release so... 
@@ -548,8 +572,9 @@ class SystemHotkey(MixIn):
         if os.name == 'nt':
             self.hk_action_queue = queue.Queue()
             self.modders = win_modders
+            self.trivial_mods = win_trivial_mods
             self._the_grab = self._nt_the_grab
-            self.get_keycode = self._nt_get_keycode         
+            self._get_keycode = self._nt_get_keycode         
             self._get_keysym = self._nt_get_keysym
             
             thread.start_new_thread(self._nt_wait,(),)
@@ -559,7 +584,7 @@ class SystemHotkey(MixIn):
             self.modders = xlib_modifiers
             self.trivial_mods = xlib_trivial_mods
             self._the_grab = self._xlib_the_grab
-            self.get_keycode = self._xlib_get_keycode
+            self._get_keycode = self._xlib_get_keycode
             self._get_keysym = self._xlib_get_keysym
             if not conn:
                 self.disp = Display()
@@ -575,7 +600,7 @@ class SystemHotkey(MixIn):
             self.modders = xcb_modifiers
             self.trivial_mods = xcb_trivial_mods
             self._the_grab = self._xcb_the_grab
-            self.get_keycode = self._xcb_get_keycode
+            self._get_keycode = self._xcb_get_keycode
             self._get_keysym = self._xcb_get_keysym
             if not conn:
                 self.conn = xcffib.connect()
@@ -666,7 +691,7 @@ class SystemHotkey(MixIn):
             time.sleep(self.check_queue_interval)
 
     def _nt_get_keycode(self, key, disp=None):
-        return vk_codes[key]
+        return vk_codes.get(key)
 
     def _nt_get_keysym(self, keycode):
         for key, value in vk_codes.items():
@@ -674,7 +699,18 @@ class SystemHotkey(MixIn):
                 return key
 
     def _nt_the_grab(self, keycode, masks, id, root=None):
-        if not user32.RegisterHotKey(None, id, masks, keycode):
+        keysym = self._get_keysym(keycode)
+        aliases = NUMPAD_ALIASES.get(keysym)
+        # register numpad aliases for the keypad
+        if aliases and self.unite_kp:
+            for alias in aliases:
+                if alias != keysym and self._get_keycode(alias):
+                    # Hack to avoid entering this control flow again..
+                    self.unite_kp = False
+                    self._the_grab(self._get_keycode(alias), masks, id)
+                    self.unite_kp = True
+
+        if not user32.RegisterHotKey(None, id, masks, keycode): 
             keysym = self._nt_get_keysym(keycode)
             msg = 'The bind could be in use elsewhere: ' + keysym
             raise SystemRegisterError(msg)
@@ -727,10 +763,11 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    hk = SystemHotkey(use_xlib=True, verbose=1)
+    hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=0)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
-    # hk.register(('a',), callback=lambda e: print('hi'))
-    hk.register(('shift','kp_3'), callback=lambda e: print('hi'))
+    #hk.register(('a',), callback=lambda e: print('hi'))
+    hk.register(('kp_3',), callback=lambda e: print('hi'))
+    #hk.register(('left',), callback=lambda e: print('hi'))
 
     # hk.register(('k',), callback=lambda e: print('i am k'))
     # hk.register(['control', 'k'], callback=lambda e: print('i am control k'))
