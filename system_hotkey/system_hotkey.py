@@ -410,7 +410,7 @@ class MixIn():
         keycode = self._get_keycode(full_hotkey[-1])
         if keycode is None:
             key = full_hotkey[-1]
-            # Make sure kp keysare in the correct format
+            # Make sure kp keys are in the correct format
             if key[:3].lower() == 'kp_':
                 keycode = self._get_keycode('KP_' + full_hotkey[-1][3:].capitalize())
             if keycode is None:
@@ -505,7 +505,17 @@ class MixIn():
             ret.append('super')
         return ret
 
-    
+    def _get_keysym(self, keycode):
+        '''
+        given a keycode returns a keysym
+        '''
+        # Todo
+        # --quirks--
+        # linux:
+        #     numpad keys with multiple keysyms are currently undistinguishable
+        # i.e kp_3 and kp_page_down look exactly the same, so we cannot implement our unite_kp..
+
+
 class SystemHotkey(MixIn):
     '''
     Cross platform System Wide Hotkeys
@@ -515,7 +525,7 @@ class SystemHotkey(MixIn):
     limitation of the keyboard and operating systems not this library
     ''' 
     hk_ref = {} 
-    def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=False):
+    def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=True):
         '''
         if the consumer param = 'callback', -> All hotkeys will require
         a callback function
@@ -534,9 +544,12 @@ class SystemHotkey(MixIn):
         otherwise one will be created for you.
 
         keybinds will work regardless if numlock/capslock are on/off.
-        If you would like numpad keys to have the same function
-        when numlock is on or off set unite_kp to True
-
+        so kp_3 will also bind to kp_page_down
+        If you do not want numpad keys to have the same function
+        when numlock is on or off set unite_kp to False (only windows)
+        TODO
+        This is still under development, triggering the key with
+        other modifyers such as shift or fn keys may or maynot work
         '''
         # Changes the class methods to point to differenct functions 
         # Depening on the operating system and library used
@@ -549,6 +562,10 @@ class SystemHotkey(MixIn):
         self.consumer = consumer
         self.check_queue_interval = check_queue_interval
         self.unite_kp = unite_kp
+        if os.name == 'posix' and not unite_kp:
+            # see _get_keysym
+            raise NotImplementedError
+
         def mark_event_type(event):
             # event gets an event_type attribute so the user has a portiabble way
             # actually on windows as far as i know you dont have the option of binding on keypress or release so... 
@@ -763,10 +780,11 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=0)
+    hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=1)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
     #hk.register(('a',), callback=lambda e: print('hi'))
     hk.register(('kp_3',), callback=lambda e: print('hi'))
+
     #hk.register(('left',), callback=lambda e: print('hi'))
 
     # hk.register(('k',), callback=lambda e: print('i am k'))
