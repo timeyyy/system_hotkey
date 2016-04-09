@@ -29,21 +29,31 @@ Linux
 Usage
 ------
 
+**Input Keysyms**
+
+System hotkeys uses the keysym names from xlib for everything besides modifiers.(although case insensitive)
+grep for vk_codes for a list of avaliable chars.
+If you are unable to bind to a certain key please let us know.
+
+You can bind directly to symbols such as ["',. etc
+Numpad keys can be binded by prefixing with kp_.
+
+Supported modifers include:
+
+- control
+- shift
+- super (win key)
+- alt
+
+A InvalidKeyError will be raised if a key was not understood
 
 .. code-block:: python
 
 	from system_hotkey import SystemHotkey
 	hk = SystemHotkeys()
-	hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
+    hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
-**Input Charachters**
-
-You can bind directly to symbols such as !@#$%^&*().
-Numpad keys can be bind by prefixing with kp_.
-
-Sysytem hotkeys uses the keysym names from xlib. You can
-see system_hotkeys.py for a list of avaliable chars.
-If you are unable to bind to a certain key please let us know.
+A SystemRegisterError will be raised if a hotkey is already in use.
 
 To unregister a hotkey
 
@@ -51,6 +61,9 @@ To unregister a hotkey
 
 	hk.unregister(('control', 'shift', 'h'))
 
+A keyerror will be raised if the combination is not already grabbed.
+
+A UnregisterError will be raised if unregistering failed for any other reason.
 
 If you want you can pass in a custom consumer:
 
@@ -60,15 +73,12 @@ If you want you can pass in a custom consumer:
 		pass	
 
 	hk = SystemHotkeys(consumer=some_func)
+    hk.register(hotkey, arg1, arg2, arg3)
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
 
-Supported modifers include:
-
-- control
-- shift
-- super (win key)
-- alt
+**Note**
+Modifyer keys are independant of order i.e control + alt + del  is the same as alt + control + del
  
 Features
 --------
@@ -78,4 +88,4 @@ Limitations
 -----------
 - I have only mapped most common keys, i have not experimented with unicode/japanese charchters etc. It's only a matter of mapping a name to the keysym on linux and virtual key code on windows.
 
-- Default non-midifyable (no current need to change this) behavior is to ignore the state of the numlock and capslock key. i.e binding to kp_left (key pad left) will also bind to kp_4
+- binding to kp_left (key pad left) will also bind to kp_4, there is a flag (unite_kp) to toggle this behavior but it is experminetal
