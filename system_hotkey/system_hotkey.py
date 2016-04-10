@@ -295,7 +295,7 @@ NUMPAD_ALIASES = Aliases(
         )
 
 class MixIn():
-    def register(self, hotkey, *args, callback=None):
+    def register(self, hotkey, *args, callback=None, overwrite=False):
         '''
         Add a system wide hotkey,
         
@@ -306,6 +306,9 @@ class MixIn():
 
         Otherwise  pass in option arguments that will be passed to the
         to consumer function
+
+        set overwrite to True to overwrite existing binds, otherwise a
+        SystemRegisterError will be raised.
         
         Modifiers include
         control
@@ -319,6 +322,14 @@ class MixIn():
         
         hotkey = self.order_hotkey(hotkey)
         keycode, masks = self.parse_hotkeylist(hotkey)
+
+        if tuple(hotkey) in KEYBINDS:
+            if overwrite:
+                self.unregister(hotkey)
+            else:
+                msg = 'existing bind detected... unregister or set overwrite to True'
+                raise SystemRegisterError(msg, *hotkey)
+                return
 
         if os.name == 'nt':
             def nt_register():
@@ -784,6 +795,7 @@ if __name__ == '__main__':
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
     #hk.register(('a',), callback=lambda e: print('hi'))
     hk.register(('kp_3',), callback=lambda e: print('hi'))
+    hk.register(('kp_3',), callback=lambda e: print('hi2'), overwrite=0)
 
     #hk.register(('left',), callback=lambda e: print('hi'))
 
