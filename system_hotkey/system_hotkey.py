@@ -138,10 +138,9 @@ if os.name == 'nt':
         }
     win_trivial_mods = (
         0,
-  #      win32con.CAPSLOCK_ON,
-        win32con.NUMLOCK_ON,
-  #      win32con.NUMLOCK_ON | win32con.CAPSLOCK_ON
-
+        # win32con.CAPSLOCK_ON,
+        # win32con.NUMLOCK_ON,
+        # win32con.NUMLOCK_ON | win32con.CAPSLOCK_ON
         )
 else:
     try:
@@ -795,7 +794,6 @@ if __name__ == '__main__':
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
     #hk.register(('a',), callback=lambda e: print('hi'))
     hk.register(('kp_3',), callback=lambda e: print('hi'))
-    hk.register(('kp_3',), callback=lambda e: print('hi2'), overwrite=0)
 
     #hk.register(('left',), callback=lambda e: print('hi'))
 
