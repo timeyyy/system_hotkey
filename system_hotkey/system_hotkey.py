@@ -773,7 +773,6 @@ class SystemHotkey(MixIn):
                         True,
                         self.root, triv_mod | masks, keycode,
                         xproto.GrabMode.Async, xproto.GrabMode.Async).check()
-                    print('added succss')
                 except struct.error: 
                     msg = 'Unable to Register, Key not understood by systemhotkey'
                     raise InvalidKeyError(msg)
