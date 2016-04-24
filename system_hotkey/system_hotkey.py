@@ -17,9 +17,6 @@ class SystemRegisterError(SystemHotkeyError):pass
 class UnregisterError(SystemHotkeyError):pass   
 class InvalidKeyError(SystemHotkeyError):pass   
 
-KEYBINDS = {}
-CALLBACKS = {}  
-
 if os.name == 'nt':
     import ctypes
     from ctypes import wintypes
@@ -314,6 +311,8 @@ class MixIn():
         shift
         super
         alt
+
+        thread safe
         '''
         assert isinstance(hotkey, collections.Iterable) and type(hotkey) not in (str, bytes)
         if self.consumer == 'callback' and not callback:
@@ -322,7 +321,7 @@ class MixIn():
         hotkey = self.order_hotkey(hotkey)
         keycode, masks = self.parse_hotkeylist(hotkey)
 
-        if tuple(hotkey) in KEYBINDS:
+        if tuple(hotkey) in self.keybinds:
             if overwrite:
                 self.unregister(hotkey)
             else:
@@ -340,13 +339,13 @@ class MixIn():
             self._the_grab(keycode, masks)
 
         if callback:
-            KEYBINDS[tuple(hotkey)] = callback
+            self.keybinds[tuple(hotkey)] = callback
         else:
-            KEYBINDS[tuple(hotkey)] = args
+            self.keybinds[tuple(hotkey)] = args
     
         if self.verbose:
             print('Printing all keybinds')
-            pprint(KEYBINDS)
+            pprint(self.keybinds)
             print()
         if os.name == 'posix' and self.use_xlib:
             self.disp.flush()
@@ -359,12 +358,12 @@ class MixIn():
         #~ copy = list(hotkey)
         #~ if event_type != 'both': 
             #~ copy.append(event_type)
-            #~ KEYBINDS[tuple(copy)].append(callback)
+            #~ self.keybinds[tuple(copy)].append(callback)
         #~ else:    # Binding to both keypress and keyrelease
             #~ copy.append('keypress')
-            #~ KEYBINDS[tuple(copy)].append(callback)
+            #~ self.keybinds[tuple(copy)].append(callback)
             #~ copy[-1] = 'keyrelease'
-            #~ KEYBINDS[tuple(copy)].append(callback)
+            #~ self.keybinds[tuple(copy)].append(callback)
         
     def unregister(self, hotkey):
         '''
@@ -391,7 +390,7 @@ class MixIn():
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
                 except xproto.BadAccess:
                     raise UnregisterError("Failed unregs")
-        del KEYBINDS[tuple(hotkey)]
+        del self.keybinds[tuple(hotkey)]
     
     def order_hotkey(self, hotkey):
         # Order doesn't matter for modifiers, so we force an order here
@@ -450,9 +449,9 @@ class MixIn():
     def get_callback(self, hotkey):
         if self.verbose:
             print('Keybinds , key here -> ', tuple(hotkey))
-            pprint(KEYBINDS)
+            pprint(self.keybinds)
         try:
-            yield KEYBINDS[tuple(hotkey)]
+            yield self.keybinds[tuple(hotkey)]
         except KeyError:
             # On Linux
             # The event gets sent a few times to us with different
@@ -467,7 +466,7 @@ class MixIn():
                     try:
                         new_hotkey = hotkey[:-1]
                         new_hotkey.append(key)
-                        yield KEYBINDS[tuple(new_hotkey)]
+                        yield self.keybinds[tuple(new_hotkey)]
                         break
                     except (KeyError, TypeError):
                         if self.verbose:
@@ -479,8 +478,8 @@ class MixIn():
             # copy.append(event_type)
             # if self.verbose:
                 # print('Keybinds , key here -> ', tuple(copy))
-                # pprint(KEYBINDS)
-            # for func in KEYBINDS[tuple(copy)]:
+                # pprint(self.keybinds)
+            # for func in self.keybinds[tuple(copy)]:
                 # yield func   
 
     
@@ -536,6 +535,9 @@ class SystemHotkey(MixIn):
     limitation of the keyboard and operating systems not this library
     ''' 
     hk_ref = {} 
+    keybinds = {}
+    
+
     def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=True):
         '''
         if the consumer param = 'callback', -> All hotkeys will require
