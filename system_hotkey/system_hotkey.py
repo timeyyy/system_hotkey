@@ -7,10 +7,9 @@ from pprint import pprint
 import struct
 
 try:
-    from .util import unique_int
+    from . import util
 except SystemError:
-    from util import unique_int
-    
+    import util
 
 class SystemHotkeyError(Exception):pass
 class SystemRegisterError(SystemHotkeyError):pass 
@@ -290,7 +289,10 @@ NUMPAD_ALIASES = Aliases(
         ('kp_9', 'kp_prior', 'kp_page_up'),
         )
 
+thread_safe = util.CallSerializer()
+
 class MixIn():
+    @thread_safe.serialize_call
     def register(self, hotkey, *args, callback=None, overwrite=False):
         '''
         Add a system wide hotkey,
@@ -331,10 +333,11 @@ class MixIn():
 
         if os.name == 'nt':
             def nt_register():
-                uniq = unique_int(self.hk_ref.keys())
+                uniq = util.unique_int(self.hk_ref.keys())
                 self.hk_ref[uniq] = ((keycode, masks))
                 self._the_grab(keycode, masks, uniq)
             self.hk_action_queue.put(lambda:nt_register())
+            time.sleep(self.check_queue_interval*3)
         else:
             self._the_grab(keycode, masks)
 
@@ -365,6 +368,7 @@ class MixIn():
             #~ copy[-1] = 'keyrelease'
             #~ self.keybinds[tuple(copy)].append(callback)
         
+    @thread_safe.serialize_call
     def unregister(self, hotkey):
         '''
         Remove the System wide hotkey,
@@ -380,6 +384,7 @@ class MixIn():
                         #~ logging.debug('Checking Error from unregister hotkey %s' % (win32api.GetLastError()))
                         return hk_to_remove     
             self.hk_action_queue.put(lambda: nt_unregister((keycode,masks)))
+            time.sleep(self.check_queue_interval*3)
         elif os.name == 'posix':
             if self.use_xlib:
                 for mod in self.trivial_mods:
@@ -390,7 +395,7 @@ class MixIn():
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
                 except xproto.BadAccess:
                     raise UnregisterError("Failed unregs")
-        del self.keybinds[tuple(hotkey)]
+        del self.keybinds[tuple(self.order_hotkey(hotkey))]
     
     def order_hotkey(self, hotkey):
         # Order doesn't matter for modifiers, so we force an order here
@@ -536,7 +541,6 @@ class SystemHotkey(MixIn):
     ''' 
     hk_ref = {} 
     keybinds = {}
-    
 
     def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=True):
         '''

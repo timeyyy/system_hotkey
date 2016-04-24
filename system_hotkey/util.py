@@ -3,6 +3,10 @@
 
     general utilites..
 '''
+import _thread as thread
+from queue import Queue
+from functools import wraps
+
 
 def unique_int(values):
     '''
@@ -20,3 +24,28 @@ def unique_int(values):
         else:
             last += 1
     return last
+
+
+class CallSerializer():
+    def __init__(self):
+        self.queue = Queue()
+        thread.start_new_thread(self.call_functions, (),)
+
+    def call_functions(self):
+        while 1:
+            func = self.queue.get(block=True)
+            args = self.queue.get(block=False)
+            kwargs = self.queue.get(block=False)
+            func(*args, **kwargs)
+
+    def serialize_call(self, function):
+        '''
+        a call to a function decorated will not have
+        overlapping calls, i.e thread safe
+        '''
+        @wraps(function)
+        def decorator(*args, **kwargs):
+            self.queue.put(function)
+            self.queue.put(args)
+            self.queue.put(kwargs)
+        return decorator
