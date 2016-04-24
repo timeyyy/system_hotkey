@@ -391,6 +391,7 @@ class MixIn():
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
                 except xproto.BadAccess:
                     raise UnregisterError("Failed unregs")
+        del KEYBINDS[tuple(hotkey)]
     
     def order_hotkey(self, hotkey):
         # Order doesn't matter for modifiers, so we force an order here
