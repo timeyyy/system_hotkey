@@ -16,7 +16,7 @@ REQUIRED = []
 setup(
 	name = 'system_hotkey',
 
-	version='0.1.4.1',
+	version='1.0.0',
 	
 	description = 'System wide hotkeys',
 	long_description = (read('README.rst') + '\n\n' +
@@ -39,7 +39,6 @@ setup(
 		'Development Status :: 3 - Alpha',
 		'Intended Audience :: Developers',
 		'Operating System :: OS Independent',
-		'Natural Language :: English',
 		'License :: OSI Approved :: BSD License',
 		# Specify the Python versions you support here. In particular, ensure
 		# that you indicate whether you support Python 2, Python 3 or both.
