@@ -10,6 +10,12 @@ eta > 9 months
 Version Release Notes
 =====================
 
+1.0.0
+-----
+* calls the unregister and register are now thread safe
+* kp keys work properly
+* kp_unite option
+
 0.1.4
 -----
 * Bug fix on linux where pressing numlock would crash us..
