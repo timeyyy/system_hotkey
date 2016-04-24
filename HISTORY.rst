@@ -12,7 +12,7 @@ Version Release Notes
 
 1.0.0
 -----
-* calls the unregister and register are now thread safe
+* calls to the unregister and register are now thread safe
 * kp keys work properly
 * kp_unite option
 

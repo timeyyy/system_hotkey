@@ -53,8 +53,8 @@ A InvalidKeyError will be raised if a key was not understood
 
 .. code-block:: python
 
-	from system_hotkey import SystemHotkey
-	hk = SystemHotkeys()
+    from system_hotkey import SystemHotkey
+    hk = SystemHotkeys()
     hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
 
 A SystemRegisterError will be raised if a hotkey is already in use.
@@ -63,7 +63,7 @@ To unregister a hotkey
 
 .. code-block:: python
 
-	hk.unregister(('control', 'shift', 'h'))
+    hk.unregister(('control', 'shift', 'h'))
 
 A KeyError will be raised if the combination is not already grabbed.
 
@@ -73,10 +73,10 @@ If you want you can pass in a custom consumer:
 
 .. code-block:: python
 
-	def some_func(self, event, hotkey, args):	
-		pass	
+    def some_func(self, event, hotkey, args):   
+        pass    
 
-	hk = SystemHotkeys(consumer=some_func)
+    hk = SystemHotkeys(consumer=some_func)
     hk.register(hotkey, arg1, arg2, arg3)
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
