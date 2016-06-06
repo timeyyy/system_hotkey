@@ -33,9 +33,7 @@ class CallSerializer():
 
     def call_functions(self):
         while 1:
-            func = self.queue.get(block=True)
-            args = self.queue.get(block=False)
-            kwargs = self.queue.get(block=False)
+            func, args, kwargs = self.queue.get(block=True)
             func(*args, **kwargs)
 
     def serialize_call(self, function):
@@ -45,7 +43,5 @@ class CallSerializer():
         '''
         @wraps(function)
         def decorator(*args, **kwargs):
-            self.queue.put(function)
-            self.queue.put(args)
-            self.queue.put(kwargs)
+            self.queue.put((function, args, kwargs))
         return decorator
