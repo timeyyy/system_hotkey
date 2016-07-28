@@ -83,8 +83,7 @@ if os.name == 'nt':
         , "space": win32con.VK_SPACE
         , "backspace": win32con.VK_BACK
         , "delete": win32con.VK_DELETE
-        , "escape": win32con.VK_ESCAPE
-        , "pause": win32con.VK_PAUSE
+        , "escape": win32con.VK_ESCAPE , "pause": win32con.VK_PAUSE
         , "kp_multiply": win32con.VK_MULTIPLY
         , "kp_add": win32con.VK_ADD
         , "kp_separator": win32con.VK_SEPARATOR
@@ -491,11 +490,11 @@ class MixIn():
     def parse_event(self, event):
         ''' Turns an event back into a hotkeylist'''
         hotkey = []
-        if os.name == 'posix':  
+        if os.name == 'posix':
             try:
-                hotkey += self.get_modifiersym(event.state) 
+                hotkey += self.get_modifiersym(event.state)
+            # When a new keyboard plugged in or numlock..
             except AttributeError:
-                # When a new keyboard plugged in or numlock..
                 return None
             
             hotkey.append(self._get_keysym(event.detail).lower())
@@ -503,6 +502,15 @@ class MixIn():
             keycode, modifiers = self.hk_ref[event.wParam][0], self.hk_ref[event.wParam][1]
             hotkey += self.get_modifiersym(modifiers)
             hotkey.append(self._get_keysym(keycode).lower())
+
+        if os.name == 'posix':
+            # if you press keys at the same time as triggering an event
+            # linux might send us a wrong key...
+            if tuple(hotkey) not in self.keybinds:
+                if self.verbose:
+                    print("bugger off spurious ", hotkey)
+                return
+
         if self.verbose:
             print('hotkey ', hotkey)
         return hotkey
@@ -674,7 +682,7 @@ class SystemHotkey(MixIn):
                     try:
                         event = self.data_queue.get(block=False)
                     except queue.Empty:
-                        pass    
+                        pass
                     else:
                         hotkey = self.parse_event(mark_event_type(event))
                         if not hotkey:
@@ -796,10 +804,10 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
 if __name__ == '__main__':
-    hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=1)
+    # hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=1)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
     #hk.register(('a',), callback=lambda e: print('hi'))
-    hk.register(('kp_3',), callback=lambda e: print('hi'))
+    # hk.register(('kp_3',), callback=lambda e: print('hi'))
 
     #hk.register(('left',), callback=lambda e: print('hi'))
 
@@ -815,10 +823,19 @@ if __name__ == '__main__':
 
     # hk.register(['k'], callback=lambda e: print('i am k2'))
     # hk.register(('control','shift', 'k'), callback=lambda e: print('i am con shift k2'))
+    def consumer(event, hotkey, args):
+        if hotkey != ["f4"]:
+            import pdb;pdb.set_trace()
+        else:
+            print(1)
+
+    hk = SystemHotkey(use_xlib=False, consumer=consumer, verbose=1,
+            check_queue_interval=0.001)
+    hk.register(('f4',), callback=lambda e: print('hi'))
     while 1:
         pass
 
-# Refernces # 
+# Refernces #
 #https://wiki.python.org/moin/AppsWithPythonScripting
 #~ http://msdn.microsoft.com/en-us/library/ms927178.aspx
 #http://www.kbdedit.com/manual/low_level_vk_list.html
