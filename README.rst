@@ -1,7 +1,7 @@
 System Hotkey
 =============
 
-Multi platform system wide hotkeys for python 3, 
+Multi platform system wide hotkeys for python 3,
 
 Currently no mac or  python2 support :(
 
@@ -11,7 +11,7 @@ Mac support is coming in a few years i would say!
 Installation
 ------------
 
-the old 
+the old
 
 .. code-block:: bash
 
@@ -25,7 +25,7 @@ install pywin32
 
 Linux
 ^^^^^
-For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license), 
+For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license),
 or you may use the python xlib bindings (gpl license)
 
 
@@ -73,8 +73,8 @@ If you want you can pass in a custom consumer:
 
 .. code-block:: python
 
-    def some_func(self, event, hotkey, args):   
-        pass    
+    def some_func(self, event, hotkey, args):
+        pass
 
     hk = SystemHotkeys(consumer=some_func)
     hk.register(hotkey, arg1, arg2, arg3)
@@ -83,7 +83,7 @@ So you have a master function that receives all hotkey presses and can delegate 
 
 **Note**
 Modifier keys are independent of order i.e control + alt + del  is the same as alt + control + del
- 
+
 Features
 --------
 - Support for up to 3 modifiers and a key
