@@ -9,6 +9,10 @@ eta > 8 months
 
 Version Release Notes
 =====================
+1.0.3
+-----
+* Documented the fact that xlib shouldn't really be used
+
 1.0.2
 -----
 * Fixed a linux bug where spurious events got passed through

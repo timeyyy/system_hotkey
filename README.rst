@@ -5,8 +5,6 @@ Multi platform system wide hotkeys for python 3,
 
 Currently no mac or  python2 support :(
 
-Mac support is coming in a few years i would say!
-
 
 Installation
 ------------
@@ -15,7 +13,7 @@ the old
 
 .. code-block:: bash
 
-    pip3 install system_hotkey
+  pip3 install system_hotkey
 
 should do the trick
 
@@ -25,9 +23,9 @@ install pywin32
 
 Linux
 ^^^^^
-For x11 you will can either use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license),
-or you may use the python xlib bindings (gpl license)
+For x11 you should use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license),
 
+If for some reason you have to use the python xlib bindings (gpl license), a few fixes need be added first. See `here <https://github.com/timeyyy/system_hotkey/issues/6#issuecomment-265410255>`_
 
 
 Usage
@@ -46,10 +44,10 @@ Supported modifiers include:
 
 - control
 - shift
-- super (win key)
+- super (windows key)
 - alt
 
-A InvalidKeyError will be raised if a key was not understood
+InvalidKeyError will be raised if a key was not understood
 
 .. code-block:: python
 

@@ -137,16 +137,18 @@ if os.name == 'nt':
         # win32con.NUMLOCK_ON,
         # win32con.NUMLOCK_ON | win32con.CAPSLOCK_ON
         )
+# Linux
 else:
     try:
         from . import xpybutil_keybind as keybind
     except SystemError:
         import xpybutil_keybind as keybind
 
+    # Xcb
     try:
-        import xcffib           # the xproto con will not work unlesss you inport this first
+        # Xproto con will not work unlesss you inport this first
+        import xcffib
         from xcffib import xproto
-        from xpybutil import keybind
 
         xcb_modifiers  = {
             'control' : xproto.ModMask.Control,
@@ -161,105 +163,69 @@ else:
             xproto.ModMask.Lock | xproto.ModMask._2)
     except ImportError:
         pass
-    try:
-        from Xlib import X
-        from Xlib import XK
-        from Xlib.display import Display
-        special_X_keysyms = {           # these couldn't be gotten from the xlib keycode function
-            ' ' : "space",
-            '\t' : "Tab",
-            '\n' : "Return",
-            '\r' : "Return",
-            '\e' : "Escape",
-            '!' : "exclam",
-            '#' : "numbersign",
-            '%' : "percent",
-            '$' : "dollar",
-            '&' : "ampersand",
-            '"' : "quotedbl",
-            '\'' : "apostrophe",
-            '(' : "parenleft",
-            ')' : "parenright",
-            '*' : "asterisk",
-            '=' : "equal",
-            '+' : "plus",
-            ',' : "comma",
-            '-' : "minus",
-            '.' : "period",
-            '/' : "slash",
-            ':' : "colon",
-            ';' : "semicolon",
-            '<' : "less",
-            '>' : "greater",
-            '?' : "question",
-            '@' : "at",
-            '[' : "bracketleft",
-            ']' : "bracketright",
-            '\\' : "backslash",
-            '^' : "asciicircum",
-            '_' : "underscore",
-            '`' : "grave",
-            '{' : "braceleft",
-            '|' : "bar",
-            '}' : "braceright",
-            '~' : "asciitilde"
-            }
+    # Xlib
+    else:
+        try:
+            from Xlib import X
+            from Xlib import XK
+            from Xlib.display import Display
+           # These couldn't be gotten from the xlib keycode function
+            special_X_keysyms = {
+                ' ' : "space",
+                '\t' : "tab",
+                '\n' : "return",
+                '\r' : "return",
+                '\e' : "escape",
+                '!' : "exclam",
+                '#' : "numbersign",
+                '%' : "percent",
+                '$' : "dollar",
+                '&' : "ampersand",
+                '"' : "quotedbl",
+                '\'' : "apostrophe",
+                '(' : "parenleft",
+                ')' : "parenright",
+                '*' : "asterisk",
+                '=' : "equal",
+                '+' : "plus",
+                ',' : "comma",
+                '-' : "minus",
+                '.' : "period",
+                '/' : "slash",
+                ':' : "colon",
+                ';' : "semicolon",
+                '<' : "less",
+                '>' : "greater",
+                '?' : "question",
+                '@' : "at",
+                '[' : "bracketleft",
+                ']' : "bracketright",
+                '\\' : "backslash",
+                '^' : "asciicircum",
+                '_' : "underscore",
+                '`' : "grave",
+                '{' : "braceleft",
+                '|' : "bar",
+                '}' : "braceright",
+                '~' : "asciitilde"
+                }
 
-        xlib_modifiers = {
-            'control' : X.ControlMask,
-            'shift' :  X.ShiftMask,
-            'alt' : X.Mod1Mask,
-            'super' : X.Mod4Mask
-            }
+            xlib_modifiers = {
+                'control' : X.ControlMask,
+                'shift' :  X.ShiftMask,
+                'alt' : X.Mod1Mask,
+                'super' : X.Mod4Mask
+                }
 
-        xlib_trivial_mods = (   # only working for scrollock
-            0,
-            X.LockMask,
-            X.Mod2Mask,
-            X.LockMask | X.Mod2Mask)
-    except ImportError:
-        pass
+            xlib_trivial_mods = (   # only working for scrollock
+                0,
+                X.LockMask,
+                X.Mod2Mask,
+                X.LockMask | X.Mod2Mask)
+        except ImportError:
+            pass
 
 
-special_X_keysyms = {
-    ' ' : "space",
-    '\t' : "Tab",
-    '\n' : "Return",
-    '\r' : "Return",
-    '\e' : "Escape",
-    '!' : "exclam",
-    '#' : "numbersign",
-    '%' : "percent",
-    '$' : "dollar",
-    '&' : "ampersand",
-    '"' : "quotedbl",
-    '\'' : "apostrophe",
-    '(' : "parenleft",
-    ')' : "parenright",
-    '*' : "asterisk",
-    '=' : "equal",
-    '+' : "plus",
-    ',' : "comma",
-    '-' : "minus",
-    '.' : "period",
-    '/' : "slash",
-    ':' : "colon",
-    ';' : "semicolon",
-    '<' : "less",
-    '>' : "greater",
-    '?' : "question",
-    '@' : "at",
-    '[' : "bracketleft",
-    ']' : "bracketright",
-    '\\' : "backslash",
-    '^' : "asciicircum",
-    '_' : "underscore",
-    '`' : "grave",
-    '{' : "braceleft",
-    '|' : "bar",
-    '}' : "braceright",
-    '~' : "asciitilde"
-    }
 
 class Aliases():
     '''
@@ -437,7 +403,7 @@ class MixIn():
                 try:
                     masks.append(self.modders[item])
                 except KeyError:
-                    raise SystemRegisterError('Modifier: %s not supported' % item)    #TBD rmeove how the keyerror gets displayed as well
+                    raise SystemRegisterError('Modifier: %s not supported' % item)    #TODO rmeove how the keyerror gets displayed as well
             masks = self.or_modifiers_together(masks)
         else:
             masks = 0
@@ -463,7 +429,7 @@ class MixIn():
             if self.verbose:
                 print('MFERROR', hotkey)
             # Possible numpad key? The keysym can change if shift is pressed (only tested on linux)
-            # Todo test numpad bindings on a non english system
+            # TODO test numpad bindings on a non english system
             aliases = NUMPAD_ALIASES.get(hotkey[-1])
             if aliases:
                 for key in aliases:
@@ -532,7 +498,7 @@ class MixIn():
         '''
         given a keycode returns a keysym
         '''
-        # Todo
+        # TODO
         # --quirks--
         # linux:
         #     numpad keys with multiple keysyms are currently undistinguishable
@@ -672,7 +638,7 @@ class SystemHotkey(MixIn):
                             if event.event_type == 'keypress':
                                 if self.verbose:
                                     print('calling ', repr(cb))
-                                cb(event)   # TBD either throw these up in a thread, or pass in a queue to be put onto
+                                cb(event)   # TODO either throw these up in a thread, or pass in a queue to be put onto
             thread.start_new_thread(thread_me,(),)
 
         elif callable(consumer):
@@ -773,7 +739,7 @@ class SystemHotkey(MixIn):
         return keybind.keysym_strings.get(keysym, [None])[0]
 
     def _xlib_the_grab(self, keycode, masks):
-        # Todo error handlig  http://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html
+        # TODO error handlig  http://tronche.com/gui/x/xlib/event-handling/protocol-errors/default-handlers.html
         # try:
         for triv_mod in self.trivial_mods:
             self.xRoot.grab_key(keycode, triv_mod | masks, 1, X.GrabModeAsync, X.GrabModeAsync)
@@ -788,7 +754,7 @@ class SystemHotkey(MixIn):
                         True,
                         self.root, triv_mod | masks, keycode,
                         xproto.GrabMode.Async, xproto.GrabMode.Async).check()
-                except struct.error: 
+                except struct.error:
                     msg = 'Unable to Register, Key not understood by systemhotkey'
                     raise InvalidKeyError(msg)
         except xproto.AccessError:
@@ -806,7 +772,7 @@ class SystemHotkey(MixIn):
 if __name__ == '__main__':
     # hk = SystemHotkey(use_xlib=True, verbose=1, unite_kp=1)
     # hk = SystemHotkey(use_xlib=False, verbose=0)    # xcb
-    #hk.register(('a',), callback=lambda e: print('hi'))
+    # hk.register(('a',), callback=lambda e: print('hi'))
     # hk.register(('kp_3',), callback=lambda e: print('hi'))
 
     #hk.register(('left',), callback=lambda e: print('hi'))
@@ -838,8 +804,8 @@ if __name__ == '__main__':
 
 # Refernces #
 #https://wiki.python.org/moin/AppsWithPythonScripting
-#~ http://msdn.microsoft.com/en-us/library/ms927178.aspx
-#http://www.kbdedit.com/manual/low_level_vk_list.html
-#http://stackoverflow.com/questions/14076207/simulating-a-key-press-event-in-python-2-7 #TBD WINDOWS KEY UP /DOWN ?
+#vk codes http://msdn.microsoft.com/en-us/library/ms927178.aspx
+#vk codes http://www.kbdedit.com/manual/low_level_vk_list.html
+#http://stackoverflow.com/questions/14076207/simulating-a-key-press-event-in-python-2-7 #TODO WINDOWS KEY UP /DOWN ?
 #https://github.com/Tzbob/python-windows-tiler/blob/master/pwt/hotkey.py
-# Tbd how to keep the lisetning alive if a n error is encounterd? how to recover?
+#TODO how to keep the lisetning alive if an error is encounterd? how to recover?
