@@ -550,7 +550,7 @@ class SystemHotkey(MixIn):
     hk_ref = {}
     keybinds = {}
 
-    def __init__(self, consumer='callback', check_queue_interval=0.01, use_xlib=False, conn=None, verbose=False, unite_kp=True):
+    def __init__(self, consumer='callback', check_queue_interval=0.0001, use_xlib=False, conn=None, verbose=False, unite_kp=True):
         '''
         if the consumer param = 'callback', -> All hotkeys will require
         a callback function
@@ -825,13 +825,14 @@ if __name__ == '__main__':
     # hk.register(('control','shift', 'k'), callback=lambda e: print('i am con shift k2'))
     def consumer(event, hotkey, args):
         if hotkey != ["f4"]:
-            import pdb;pdb.set_trace()
+            print(1)
+            # import pdb;pdb.set_trace()
         else:
             print(1)
 
-    hk = SystemHotkey(use_xlib=False, consumer=consumer, verbose=1,
+    hk = SystemHotkey(use_xlib=False, consumer=consumer, verbose=0,
             check_queue_interval=0.001)
-    hk.register(('f4',), callback=lambda e: print('hi'))
+    hk.register(('escape',), callback=lambda e: print('hi'))
     while 1:
         pass
 

@@ -4,11 +4,14 @@ To be done
 
 Mac support
 
-eta > 9 months
+eta > 8 months
 
 
 Version Release Notes
 =====================
+1.0.2
+-----
+* Fixed a linux bug where spurious events got passed through
 
 1.0.0
 -----
