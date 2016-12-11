@@ -6,5 +6,5 @@ dist/
 *egg-info/
 *.bat
 .cache/
-
+tags
 

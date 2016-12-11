@@ -91,3 +91,5 @@ Limitations
 - I have only mapped most common keys, i have not experimented with Unicode/Japanese characters etc. It's only a matter of mapping a name to the keysym on Linux and virtual key code on windows.
 
 - binding to kp_left (key pad left) will also bind to kp_4, there is a flag (unite_kp) to toggle this behaviour but it is experimental
+
+- Requires an xserver (x11)...

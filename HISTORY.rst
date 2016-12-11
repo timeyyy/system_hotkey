@@ -9,6 +9,10 @@ eta > 8 months
 
 Version Release Notes
 =====================
+1.0.4
+-----
+* Exceptions are now run in main
+
 1.0.3
 -----
 * Documented the fact that xlib shouldn't really be used
