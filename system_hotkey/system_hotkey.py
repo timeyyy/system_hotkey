@@ -257,7 +257,7 @@ NUMPAD_ALIASES = Aliases(
 thread_safe = util.CallSerializer()
 
 class MixIn():
-    @thread_safe.serialize_call
+    @thread_safe.serialize_call(0.5)
     def register(self, hotkey, *args, callback=None, overwrite=False):
         '''
         Add a system wide hotkey,
@@ -333,11 +333,14 @@ class MixIn():
             #~ copy[-1] = 'keyrelease'
             #~ self.keybinds[tuple(copy)].append(callback)
 
-    @thread_safe.serialize_call
+    @thread_safe.serialize_call(0.5)
     def unregister(self, hotkey):
         '''
         Remove the System wide hotkey,
         the order of the modifier keys is irrelevant
+
+        InvalidKeyError raised if key not understood
+        UnregisterError raiesd if key doesn't exist
         '''
         keycode, masks = self.parse_hotkeylist(hotkey)
         if os.name == 'nt':
@@ -360,7 +363,10 @@ class MixIn():
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
                 except xproto.BadAccess:
                     raise UnregisterError("Failed unregs")
-        del self.keybinds[tuple(self.order_hotkey(hotkey))]
+        try:
+            del self.keybinds[tuple(self.order_hotkey(hotkey))]
+        except KeyError as err:
+            raise UnregisterError from err
 
     def order_hotkey(self, hotkey):
         # Order doesn't matter for modifiers, so we force an order here
@@ -403,7 +409,8 @@ class MixIn():
                 try:
                     masks.append(self.modders[item])
                 except KeyError:
-                    raise SystemRegisterError('Modifier: %s not supported' % item)    #TODO rmeove how the keyerror gets displayed as well
+                    #TODO rmeove how the keyerror gets displayed as well
+                    raise SystemRegisterError('Modifier: %s not supported' % item)
             masks = self.or_modifiers_together(masks)
         else:
             masks = 0
