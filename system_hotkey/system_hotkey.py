@@ -294,7 +294,6 @@ class MixIn():
             else:
                 msg = 'existing bind detected... unregister or set overwrite to True'
                 raise SystemRegisterError(msg, *hotkey)
-                return
 
         if os.name == 'nt':
             def nt_register():
@@ -361,8 +360,8 @@ class MixIn():
                 try:
                     for mod in self.trivial_mods:
                         self.conn.core.UngrabKeyChecked(keycode, self.root, masks | mod).check()
-                except xproto.BadAccess:
-                    raise UnregisterError("Failed unregs")
+                except xproto.BadAccess as e:
+                    raise UnregisterError("Failed to unregister") from e
         try:
             del self.keybinds[tuple(self.order_hotkey(hotkey))]
         except KeyError as err:
@@ -409,8 +408,7 @@ class MixIn():
                 try:
                     masks.append(self.modders[item])
                 except KeyError:
-                    #TODO rmeove how the keyerror gets displayed as well
-                    raise SystemRegisterError('Modifier: %s not supported' % item)
+                    raise SystemRegisterError('Modifier: %s not supported' % item) from None
             masks = self.or_modifiers_together(masks)
         else:
             masks = 0
@@ -761,13 +759,13 @@ class SystemHotkey(MixIn):
                         True,
                         self.root, triv_mod | masks, keycode,
                         xproto.GrabMode.Async, xproto.GrabMode.Async).check()
-                except struct.error:
+                except struct.error as e:
                     msg = 'Unable to Register, Key not understood by systemhotkey'
-                    raise InvalidKeyError(msg)
-        except xproto.AccessError:
+                    raise InvalidKeyError(msg) from e 
+        except xproto.AccessError as e:
             keysym = self._xcb_get_keysym(keycode)
             msg = 'The bind could be in use elsewhere: ' + keysym
-            raise SystemRegisterError(msg)
+            raise SystemRegisterError(msg) from e
 
     def _xcb_get_keycode(self, key):
         return keybind.lookup_string(key)
