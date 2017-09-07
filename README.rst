@@ -52,8 +52,8 @@ InvalidKeyError will be raised if a key was not understood
 .. code-block:: python
 
     from system_hotkey import SystemHotkey
-    hk = SystemHotkeys()
-    hk.register(('control', 'shift', 'h'), callback=lambda:print("Easy!"))
+    hk = SystemHotkey()
+    hk.register(('control', 'shift', 'h'), callback=lambda x: print("Easy!"))
 
 A SystemRegisterError will be raised if a hotkey is already in use.
 
