@@ -74,7 +74,7 @@ If you want you can pass in a custom consumer:
     def some_func(self, event, hotkey, args):
         pass
 
-    hk = SystemHotkeys(consumer=some_func)
+    hk = SystemHotkey(consumer=some_func)
     hk.register(hotkey, arg1, arg2, arg3)
 
 So you have a master function that receives all hotkey presses and can delegate as desired.
