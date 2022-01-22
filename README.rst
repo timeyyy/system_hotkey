@@ -25,7 +25,7 @@ Linux
 ^^^^^
 For x11 you should use `xcffib <https://github.com/tych0/xcffib>`_  (bsd license),
 
-If for some reason you have to use the python xlib bindings (gpl license), a few fixes need be added first. See `here <https://github.com/timeyyy/system_hotkey/issues/6#issuecomment-265410255>`_
+If for some reason you have to use the python xlib bindings (gpl license), a few fixes need to be added first. See `here <https://github.com/timeyyy/system_hotkey/issues/6#issuecomment-265410255>`_
 
 
 Usage
@@ -33,7 +33,7 @@ Usage
 
 **Input Keysyms**
 
-System hotkeys uses the keysym names from xlib for everything besides modifiers.(although case insensitive)
+System hotkey uses the keysym names from xlib for everything besides modifiers.(although case insensitive)
 grep for vk_codes for a list of available chars.
 If you are unable to bind to a certain key please let us know.
 
@@ -88,7 +88,7 @@ Features
 
 Limitations
 -----------
-- I have only mapped most common keys, i have not experimented with Unicode/Japanese characters etc. It's only a matter of mapping a name to the keysym on Linux and virtual key code on windows.
+- I have only mapped most common keys, I have not experimented with Unicode/Japanese characters etc. It's only a matter of mapping a name to the keysym on Linux and virtual key code on windows.
 
 - binding to kp_left (key pad left) will also bind to kp_4, there is a flag (unite_kp) to toggle this behaviour but it is experimental
 
