@@ -136,7 +136,7 @@ if os.name == 'nt':
         }
     
     if hasattr(win32con, 'VK_MEDIA_STOP'):
-        vk_codes.set("media_stop", win32con.VK_MEDIA_STOP)
+        vk_codes.setdefault("media_stop", win32con.VK_MEDIA_STOP)
     
     win_modders = {
         "shift": win32con.MOD_SHIFT
