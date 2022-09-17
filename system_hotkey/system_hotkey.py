@@ -131,7 +131,6 @@ if os.name == 'nt':
         , "f23": win32con.VK_F23
         , "f24": win32con.VK_F24
         , "media_play_pause": win32con.VK_MEDIA_PLAY_PAUSE
-        , "media_stop": win32con.VK_MEDIA_STOP
         , "media_next": win32con.VK_MEDIA_NEXT_TRACK
         , "media_previous": win32con.VK_MEDIA_PREV_TRACK
         }
