@@ -31,6 +31,8 @@ If for some reason you have to use the python xlib bindings (gpl license), a few
 Usage
 ------
 
+Download this and use `pip install . --user` in root folder to install
+
 **Input Keysyms**
 
 System hotkeys uses the keysym names from xlib for everything besides modifiers.(although case insensitive)
