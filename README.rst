@@ -9,13 +9,11 @@ Currently no mac or  python2 support :(
 Installation
 ------------
 
-the old
-
 .. code-block:: bash
 
-  pip3 install system_hotkey
+  pip install . --user
 
-should do the trick
+in the root folder
 
 Windows
 ^^^^^^^
@@ -30,8 +28,6 @@ If for some reason you have to use the python xlib bindings (gpl license), a few
 
 Usage
 ------
-
-Download this and use `pip install . --user` in root folder to install
 
 **Input Keysyms**
 
