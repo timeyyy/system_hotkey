@@ -61,6 +61,8 @@ if os.name == 'nt':
         '7':0x37,
         '8':0x38,
         '9':0x39,
+        "grave": 0xC0,
+        "`": 0xC0,
         "up": win32con.VK_UP
         , "kp_up": win32con.VK_UP
         , "down": win32con.VK_DOWN
