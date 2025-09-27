@@ -2,7 +2,7 @@ import os
 import _thread as thread
 import queue
 import time
-import collections
+import collections.abc
 from pprint import pprint
 import struct
 
@@ -285,7 +285,7 @@ class MixIn():
 
         thread safe
         '''
-        assert isinstance(hotkey, collections.Iterable) and type(hotkey) not in (str, bytes)
+        assert isinstance(hotkey, collections.abc.Iterable) and type(hotkey) not in (str, bytes)
         if self.consumer == 'callback' and not callback:
             raise TypeError('Function register requires callback argument in non sonsumer mode')
 
