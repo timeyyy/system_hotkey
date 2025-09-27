@@ -9,13 +9,11 @@ Currently no mac or  python2 support :(
 Installation
 ------------
 
-the old
-
 .. code-block:: bash
 
-  pip3 install system_hotkey
+  pip install . --user
 
-should do the trick
+in the root folder
 
 Windows
 ^^^^^^^
